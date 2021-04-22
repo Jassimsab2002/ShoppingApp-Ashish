@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".home.HomePage">
+        <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+           <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:id="@+id/main_holder"
+            android:layout_height="match_parent"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/forWomenRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/forWomen"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/WatchesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/watches"
+                android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="75dp"
+                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="See All"
+                app:layout_constraintRight_toRightOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/forWomenRecyclerView"
+                android:textColor="#00FF55"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="25dp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Watches"
+                android:id="@+id/watches"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/forWomenRecyclerView"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="See All"
+                app:layout_constraintRight_toRightOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/card2"
+                android:textColor="#00FF55"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="25dp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="For Women"
+                android:id="@+id/forWomen"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/card2"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FF55"
+                android:fontFamily="@font/bold"
+                android:gravity="center"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="15dp"
+                android:text="Get free product 100%"
+                android:textColor="#fff"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <TextView
+                android:id="@+id/Hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/bold"
+                android:text="Hello,"
+                android:textColor="#162B0404"
+                android:textSize="16dp"
+                app:layout_constraintLeft_toRightOf="@id/menu"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                android:layout_marginTop="15dp"
+                />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:fontFamily="@font/bold"
+                android:textSize="25dp"
+                app:layout_constraintTop_toTopOf="@id/Hello"
+                app:layout_constraintLeft_toLeftOf="@id/Hello"
+                android:textColor="#000"
+                android:layout_marginTop="16dp"
+                />
+
+            <FrameLayout
+                android:id="@+id/cart"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/settings"
+                app:layout_constraintBottom_toBottomOf="@id/user_name"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/Hello" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_shopping_cart"
+                    android:layout_margin="15dp"
+                    />
+
+            </FrameLayout>
+
+               <FrameLayout
+                   android:id="@+id/menu"
+                   android:layout_width="0dp"
+                   android:layout_height="0dp"
+                   android:layout_marginLeft="20dp"
+                   android:background="@drawable/settings"
+                   app:layout_constraintBottom_toBottomOf="@id/user_name"
+                   app:layout_constraintDimensionRatio="1:1"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toTopOf="@id/Hello" >
+
+                   <ImageView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:src="@drawable/ic_menu"
+                       android:layout_margin="15dp"
+                       />
+
+               </FrameLayout>
+
+            <EditText
+                android:id="@+id/searching"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="I'm looking for ..."
+                android:background="@drawable/settings"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="15dp"
+                android:fontFamily="@font/normal"
+                app:layout_constraintTop_toBottomOf="@id/user_name"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="22dp"
+                android:textColorHint="#34000000"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Best Selling"
+                android:id="@+id/suggestions"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/card"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="25dp"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1.7:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/searching"
+                android:layout_marginHorizontal="20dp"
+                app:cardCornerRadius="25dp"
+                >
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/image_ads"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ads"
+                        android:scaleType="centerCrop"
+                        />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintDimensionRatio="1.7:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/forMen">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/image_ads2"
+                        android:layout_width="match_parent"
+                        app:layout_constraintDimensionRatio="1.7:1"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ads" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="See All"
+                app:layout_constraintRight_toRightOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/card"
+                android:textColor="#00FF55"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="25dp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="See All"
+                app:layout_constraintRight_toRightOf="@id/recyclerview"
+                app:layout_constraintTop_toBottomOf="@id/recyclerview"
+                android:textColor="#00FF55"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="See All"
+                app:layout_constraintRight_toRightOf="@id/recyclerview"
+                app:layout_constraintTop_toBottomOf="@id/cards"
+                android:textColor="#00FF55"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/suggestions"
+                android:layout_marginTop="15dp"
+                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Suggestions"
+                android:id="@+id/best"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/recyclerview"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Best Selling Product"
+                android:id="@+id/product"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/BestSelling_recyclerview"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="For Men"
+                android:id="@+id/Men"
+                app:layout_constraintLeft_toLeftOf="@id/searching"
+                app:layout_constraintTop_toBottomOf="@id/cards"
+                android:textColor="#000"
+                android:fontFamily="@font/bold"
+                android:layout_marginTop="15dp"
+
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/forMen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/Men"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/BestSelling_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/best"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                />
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cards"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                app:cardBackgroundColor="#F3F3F3"
+                app:cardCornerRadius="25dp"
+                android:elevation="0dp"
+                android:layout_marginTop="15dp"
+
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/product_image"
+                    android:src="@drawable/image"
+                    />
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/product_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/cards"
+                app:layout_constraintTop_toTopOf="@id/cards"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="Apple Watch  Men XR6"
+                android:fontFamily="@font/bold"
+                android:textSize="19dp"
+                android:textColor="#000"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:elevation="5dp"
+                />
+            <TextView
+                android:id="@+id/product_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/cards"
+                app:layout_constraintTop_toBottomOf="@id/product_title"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="Apple Watch  Men XR6 i was working out and some one came to me and said that he will fuck her i said i will fuck you right now just be sure son of a beach"
+                android:fontFamily="@font/normal"
+                android:textSize="10dp"
+                android:textColor="#68000000"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:elevation="5dp"
+                />
+            <TextView
+                android:id="@+id/see_more"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/cards"
+                app:layout_constraintTop_toBottomOf="@id/product_description"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="See More"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/bold"
+                android:textSize="13dp"
+                android:textColor="#00FF55"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:elevation="5dp"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nvView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/drawer" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

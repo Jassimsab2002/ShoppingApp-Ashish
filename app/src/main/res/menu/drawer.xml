@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_user"
+        android:title="Account"/>
+
+    <item
+        android:id="@+id/wishlist"
+        android:title="WishList"
+        android:icon="@drawable/ic_clipboard"/>
+    <item
+        android:icon="@drawable/ic_shop"
+        android:title="All Categories"
+        android:id="@+id/AllCategories"
+        />
+    <item
+        android:icon="@drawable/ic_discount"
+        android:title="Offer Zone"
+        android:id="@+id/OfferZone"
+        />
+    <item
+        android:icon="@drawable/ic_baseline_notifications_none_24"
+        android:title="Notification"
+        android:id="@+id/notification"
+        />
+
+
+</menu>
