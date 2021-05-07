@@ -2,13 +2,13 @@ package com.shop.shoppingapp.module;
 
 public class Product {
 
-    String Title , Price , StoreName , Rating , ImageUrl ;
+    String Title , Price , StoreName , Description , ImageUrl ;
 
-    public Product (String Title , String Price , String StoreName , String Rating , String ImageUrl ){
+    public Product (String Title , String Price , String StoreName , String Description , String ImageUrl ){
         this.Title = Title ;
         this.Price = Price ;
         this.StoreName = StoreName ;
-        this.Rating = Rating ;
+        this.Description = Description ;
     }
     public Product (){}
     public String getImageUrl(){
@@ -42,12 +42,12 @@ public class Product {
         StoreName = storeName;
     }
 
-    public String getRating() {
-        return Rating;
+    public String getDescription() {
+        return Description;
     }
 
-    public void setRating(String rating) {
-        Rating = rating;
+    public void setDescription(String Description) {
+        this.Description = Description;
     }
 
 
