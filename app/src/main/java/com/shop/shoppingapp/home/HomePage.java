@@ -1,6 +1,5 @@
 package com.shop.shoppingapp.home;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -26,6 +26,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,11 +36,13 @@ import com.google.firebase.firestore.model.Document;
 import com.shop.shoppingapp.Cart.Cart;
 import com.shop.shoppingapp.R;
 import com.shop.shoppingapp.authentification.Sign_In;
+import com.shop.shoppingapp.buy.ProductImagesAdapter;
 import com.shop.shoppingapp.buy.product_page;
+import com.shop.shoppingapp.lists.Favorite;
 import com.shop.shoppingapp.module.Product;
 import com.shop.shoppingapp.viewholders.ProductHolder;
-
 public class HomePage extends Fragment {
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class HomePage extends Fragment {
     }
 
     public HomePage() {
-        // Required empty public constructor
     }
 
     FirebaseUser user ;
@@ -64,7 +66,7 @@ public class HomePage extends Fragment {
     RecyclerView recyclerView , best_selling , menRecyclerView ,womanRecyclerView ,watchRecyclerView ;
     LinearLayoutManager layoutManager ,layoutManagerSuggestions ,menLayoutManager , womanLayoutManager ,watchesLayoutManager ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance() ;
-    Query suggestionQuery ,menQuery ,womanQuery ,watchesQuery ;
+    Query suggestionQuery , menQuery , womanQuery ,watchesQuery ;
     FirestoreRecyclerAdapter adapter , suggestionAdapter , menAdapter , womanAdapter , watchesAdapter ;
     TextView title , store , price ;
     ImageView image , iAds , iAds2 ;
@@ -72,6 +74,9 @@ public class HomePage extends Fragment {
     FrameLayout fMenu , fCart ;
     FragmentTransaction transaction ;
     Cart cart ;
+    ProductImagesAdapter productImagesAdapter ;
+    NavigationView navigationView ;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +84,6 @@ public class HomePage extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
         sName = sharedPreferences.getString("name",null);
-
         recyclerView = view.findViewById(R.id.recyclerview);
         best_selling = view.findViewById(R.id.BestSelling_recyclerview);
         menRecyclerView = view.findViewById(R.id.forMen);
@@ -91,6 +95,7 @@ public class HomePage extends Fragment {
         fCart = view.findViewById(R.id.cart);
         iAds = view.findViewById(R.id.image_ads);
         iAds2 = view.findViewById(R.id.image_ads2);
+        navigationView = view.findViewById(R.id.nvView);
 
         cart = new Cart();
         setOnClicks();
@@ -109,7 +114,8 @@ public class HomePage extends Fragment {
            }
             }
         });
-        firestore.collection("Ads").document("2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firestore.collection("Ad" +
+                "s").document("2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
@@ -141,6 +147,22 @@ public class HomePage extends Fragment {
         womanQuery = firestore.collection("Product").whereEqualTo("Sex","Woman");
         watchesQuery = firestore.collection("Product").whereEqualTo("Category","Watches");
 
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.wishlist:
+                    Intent intent = new Intent(getActivity(), Favorite.class);
+                    startActivity(intent);
+                        break;
+
+                    case R.id.account:
+                        break;
+                }
+                return true;
+            }
+        });
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(suggestionQuery,Product.class)
                 .build();
@@ -202,6 +224,8 @@ public class HomePage extends Fragment {
                         intent.putExtra("StoreName",model.getStoreName());
                         intent.putExtra("Price", model.getPrice());
                         intent.putExtra("Description",model.getDescription());
+                        intent.putExtra("ImageUrl",model.getImageUrl());
+                        intent.putExtra("Details",model.getDetails());
                         startActivity(intent);
 
                     }
@@ -293,6 +317,7 @@ public class HomePage extends Fragment {
         best_selling.setAdapter(suggestionAdapter);
         recyclerView.setAdapter(adapter);
         womanRecyclerView.setAdapter(womanAdapter);
+
         return  view ;
     }
 
@@ -319,16 +344,17 @@ public class HomePage extends Fragment {
     public void onStart() {
         super.onStart();
         user = firebaseAuth.getCurrentUser();
-        suggestionAdapter.startListening();
-        menAdapter.startListening();
-        womanAdapter.startListening();
-        adapter.startListening();
-        watchesAdapter.startListening();
         if (user == null){
             Intent intent = new Intent(getActivity(), Sign_In.class);
             startActivity(intent);
             getActivity().finish();
         }
+        suggestionAdapter.startListening();
+        menAdapter.startListening();
+        womanAdapter.startListening();
+        adapter.startListening();
+        watchesAdapter.startListening();
+
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.shop.shoppingapp.Cart.Cart;
 import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.home.HomePage;
 import com.shop.shoppingapp.module.Product;
+import com.shop.shoppingapp.profile.Profile_Fragment;
 import com.shop.shoppingapp.viewholders.ProductHolder;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView ;
     Cart cart ;
     SharedPreferences sharedPreferences ;
+    Profile_Fragment profile_fragment ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +49,11 @@ public class MainActivity extends AppCompatActivity {
         homePage = new HomePage(sharedPreferences);
         storePage = new StorePage();
         cart = new Cart();
+        profile_fragment = new Profile_Fragment();
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.container,homePage).commit();
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -57,11 +61,19 @@ public class MainActivity extends AppCompatActivity {
                 switch(menuItem.getItemId()){
                     case R.id.home :
                         transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack("sfd");
                         transaction.replace(R.id.container , homePage).commit();
                         break;
                     case R.id.shop :
                         transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack("sfd");
                         transaction.replace(R.id.container , storePage).commit();
+                        break;
+
+                    case R.id.profile :
+                        transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack("sfd");
+                        transaction.replace(R.id.container ,profile_fragment).commit();
                         break;
 
                 }

@@ -1,19 +1,13 @@
 package com.shop.shoppingapp.viewholders;
 
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.shop.shoppingapp.R;
-import com.shop.shoppingapp.module.Product;
-
-public class ProductHolder extends RecyclerView.ViewHolder
-{
-
+public class CatagoriesHolder extends RecyclerView.ViewHolder {
     View view ;
-    public ProductHolder(@NonNull View itemView) {
+    public CatagoriesHolder(@NonNull View itemView) {
         super(itemView);
         view = itemView ;
         view.setOnClickListener(new View.OnClickListener() {
@@ -26,12 +20,11 @@ public class ProductHolder extends RecyclerView.ViewHolder
 
     private ProductHolder.ClickListener mClickListener ;
     public interface ClickListener{
-         void onClickListener(View v);
+        public void onClickListener(View v);
     }
 
     public void setOnClickListener(ProductHolder.ClickListener clickListener){
         mClickListener = clickListener ;
     }
-
 
 }

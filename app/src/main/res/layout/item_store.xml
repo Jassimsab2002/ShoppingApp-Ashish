@@ -27,14 +27,12 @@
             app:layout_constraintRight_toRightOf="parent"
             android:background="#F4F4F4"
             android:padding="10dp"
-            android:src="@drawable/image"
             />
 
         <TextView
             android:id="@+id/product_title"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:text="Watch Trxsr 759 Me..."
             app:layout_constraintTop_toBottomOf="@id/product_image"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -50,7 +48,6 @@
             android:id="@+id/product_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tencion Store"
             app:layout_constraintTop_toBottomOf="@id/product_title"
             app:layout_constraintLeft_toLeftOf="@id/product_title"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -69,7 +66,6 @@
             app:layout_constraintTop_toTopOf="@id/product_store"
             app:layout_constraintBottom_toBottomOf="@id/product_store"
             app:layout_constraintRight_toRightOf="@id/product_title"
-            android:text="150$"
             android:textSize="13dp"
             android:fontFamily="@font/bold"
             android:textColor="#00FF55"
