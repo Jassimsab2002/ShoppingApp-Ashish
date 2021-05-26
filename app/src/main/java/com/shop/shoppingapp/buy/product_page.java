@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class product_page extends AppCompatActivity {
 
     Intent intent ;
-    TextView tStoreName , tProductTitle , tProductPrice , tProductDescription , tProductDetails;
+    TextView tStoreName , tProductTitle , tProductPrice , tProductDescription , tProductDetails ,tAddToCart;
     String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductImage , sProductDetails;
     ImageView iSend , iFavorite , iBack ;
     CardView cAddToCart , cBuyNow;
@@ -50,6 +50,7 @@ public class product_page extends AppCompatActivity {
         iBack = findViewById(R.id.back);
         cAddToCart = findViewById(R.id.cardView2);
         cBuyNow = findViewById(R.id.cardView);
+        tAddToCart = findViewById(R.id.addToCart);
 
 
         //onClicks

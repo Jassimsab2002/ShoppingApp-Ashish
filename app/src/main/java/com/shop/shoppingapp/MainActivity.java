@@ -2,34 +2,16 @@ package com.shop.shoppingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.shop.shoppingapp.Cart.Cart;
-import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.home.HomePage;
-import com.shop.shoppingapp.module.Product;
 import com.shop.shoppingapp.profile.Profile_Fragment;
-import com.shop.shoppingapp.viewholders.ProductHolder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     HomePage homePage ;
     StorePage storePage ;
     BottomNavigationView bottomNavigationView ;
-    Cart cart ;
     SharedPreferences sharedPreferences ;
     Profile_Fragment profile_fragment ;
     @Override
@@ -48,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
         homePage = new HomePage(sharedPreferences);
         storePage = new StorePage();
-        cart = new Cart();
         profile_fragment = new Profile_Fragment();
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.container,homePage).commit();

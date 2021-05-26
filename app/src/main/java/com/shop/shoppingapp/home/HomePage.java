@@ -32,8 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.model.Document;
-import com.shop.shoppingapp.Cart.Cart;
+import com.shop.shoppingapp.Cart.ActivityCart;
 import com.shop.shoppingapp.R;
 import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.buy.ProductImagesAdapter;
@@ -61,19 +60,18 @@ public class HomePage extends Fragment {
 
     FirebaseUser user ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    TextView tUserName ;
+    TextView tUserName , tSeeShoes , tSeeApparelMen , tSeeApparelWomen, tSeeWatches  ;
     String sName ;
-    RecyclerView recyclerView , best_selling , menRecyclerView ,womanRecyclerView ,watchRecyclerView ;
+    RecyclerView recyclerView , shoesRecyclerView , menRecyclerView ,womanRecyclerView ,watchRecyclerView ;
     LinearLayoutManager layoutManager ,layoutManagerSuggestions ,menLayoutManager , womanLayoutManager ,watchesLayoutManager ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance() ;
-    Query suggestionQuery , menQuery , womanQuery ,watchesQuery ;
-    FirestoreRecyclerAdapter adapter , suggestionAdapter , menAdapter , womanAdapter , watchesAdapter ;
+    Query shoesQuery , menQuery , womanQuery ,watchesQuery ;
+    FirestoreRecyclerAdapter adapter , shoesAdapter , menAdapter , womanAdapter , watchesAdapter ;
     TextView title , store , price ;
     ImageView image , iAds , iAds2 ;
     DrawerLayout nMenu ;
     FrameLayout fMenu , fCart ;
     FragmentTransaction transaction ;
-    Cart cart ;
     ProductImagesAdapter productImagesAdapter ;
     NavigationView navigationView ;
 
@@ -85,7 +83,7 @@ public class HomePage extends Fragment {
 
         sName = sharedPreferences.getString("name",null);
         recyclerView = view.findViewById(R.id.recyclerview);
-        best_selling = view.findViewById(R.id.BestSelling_recyclerview);
+        shoesRecyclerView = view.findViewById(R.id.BestSelling_recyclerview);
         menRecyclerView = view.findViewById(R.id.forMen);
         tUserName = view.findViewById(R.id.user_name);
         womanRecyclerView = view.findViewById(R.id.forWomenRecyclerView);
@@ -96,8 +94,10 @@ public class HomePage extends Fragment {
         iAds = view.findViewById(R.id.image_ads);
         iAds2 = view.findViewById(R.id.image_ads2);
         navigationView = view.findViewById(R.id.nvView);
-
-        cart = new Cart();
+        tSeeApparelMen = view.findViewById(R.id.see_all_menAppral);
+        tSeeApparelWomen = view.findViewById(R.id.see_all_apparelwomen);
+        tSeeShoes = view.findViewById(R.id.see_all_shoes);
+        tSeeWatches = view.findViewById(R.id.see_all_watches);
         setOnClicks();
 
         tUserName.setText(sName);
@@ -114,6 +114,7 @@ public class HomePage extends Fragment {
            }
             }
         });
+
         firestore.collection("Ad" +
                 "s").document("2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -134,7 +135,7 @@ public class HomePage extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         layoutManagerSuggestions = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        best_selling.setLayoutManager(layoutManagerSuggestions);
+        shoesRecyclerView.setLayoutManager(layoutManagerSuggestions);
 
         menLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         menRecyclerView.setLayoutManager(menLayoutManager);
@@ -142,7 +143,7 @@ public class HomePage extends Fragment {
         womanLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         womanRecyclerView.setLayoutManager(womanLayoutManager);
 
-        suggestionQuery = firestore.collection("Product");
+        shoesQuery = firestore.collection("Product");
         menQuery = firestore.collection("Product").whereEqualTo("Sex","Men");
         womanQuery = firestore.collection("Product").whereEqualTo("Sex","Woman");
         watchesQuery = firestore.collection("Product").whereEqualTo("Category","Watches");
@@ -164,7 +165,7 @@ public class HomePage extends Fragment {
             }
         });
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(suggestionQuery,Product.class)
+                .setQuery(shoesQuery,Product.class)
                 .build();
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptionsMen = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(menQuery ,Product.class)
@@ -178,30 +179,6 @@ public class HomePage extends Fragment {
                 .build();
 
         adapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(firestoreRecyclerOptions) {
-            @Override
-            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
-
-                title = holder.itemView.findViewById(R.id.product_title);
-                store = holder.itemView.findViewById(R.id.product_store);
-                price = holder.itemView.findViewById(R.id.product_price);
-                image = holder.itemView.findViewById(R.id.product_image);
-
-                Glide.with(getContext()).load(model.getImageUrl()).into(image);
-                title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
-
-            }
-
-            @NonNull
-            @Override
-            public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler,parent,false);
-                return new ProductHolder(view);
-            }
-        };
-
-        suggestionAdapter = new FirestoreRecyclerAdapter<Product,ProductHolder>(firestoreRecyclerOptions) {
             @Override
             protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Product model) {
 
@@ -236,14 +213,54 @@ public class HomePage extends Fragment {
             @NonNull
             @Override
             public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler,parent,false);
+                return new ProductHolder(view);
+            }
+        };
+
+        shoesAdapter = new FirestoreRecyclerAdapter<Product,ProductHolder>(firestoreRecyclerOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Product model) {
+
+                title = holder.itemView.findViewById(R.id.product_title);
+                store = holder.itemView.findViewById(R.id.product_store);
+                price = holder.itemView.findViewById(R.id.product_price);
+                image = holder.itemView.findViewById(R.id.product_image);
+
+                Glide.with(getContext()).load(model.getImageUrl()).into(image);
+                title.setText(model.getTitle());
+                store.setText(model.getPrice());
+                price.setText(model.getPrice());
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                    @Override
+                    public void onClickListener(View v) {
+
+                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), product_page.class);
+                        intent.putExtra("Title",model.getTitle());
+                        intent.putExtra("StoreName",model.getStoreName());
+                        intent.putExtra("Price", model.getPrice());
+                        intent.putExtra("Description",model.getDescription());
+                        intent.putExtra("ImageUrl",model.getImageUrl());
+                        intent.putExtra("Details",model.getDetails());
+                        startActivity(intent);
+
+                    }
+                });
+
+            }
+
+            @NonNull
+            @Override
+            public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_store,parent,false);
                 return new ProductHolder(view);
             }
         };
 
         menAdapter = new FirestoreRecyclerAdapter<Product,ProductHolder>(firestoreRecyclerOptionsMen) {
             @Override
-            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Product model) {
 
                 title = holder.itemView.findViewById(R.id.product_title);
                 store = holder.itemView.findViewById(R.id.product_store);
@@ -254,20 +271,36 @@ public class HomePage extends Fragment {
                 title.setText(model.getTitle());
                 store.setText(model.getPrice());
                 price.setText(model.getPrice());
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                    @Override
+                    public void onClickListener(View v) {
+
+                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), product_page.class);
+                        intent.putExtra("Title",model.getTitle());
+                        intent.putExtra("StoreName",model.getStoreName());
+                        intent.putExtra("Price", model.getPrice());
+                        intent.putExtra("Description",model.getDescription());
+                        intent.putExtra("ImageUrl",model.getImageUrl());
+                        intent.putExtra("Details",model.getDetails());
+                        startActivity(intent);
+
+                    }
+                });
 
             }
 
             @NonNull
             @Override
             public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_store,parent,false);
                 return new ProductHolder(view);
             }
         };
 
         womanAdapter = new FirestoreRecyclerAdapter<Product,ProductHolder>(firestoreRecyclerOptionsWoman) {
             @Override
-            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Product model) {
 
                 title = holder.itemView.findViewById(R.id.product_title);
                 store = holder.itemView.findViewById(R.id.product_store);
@@ -278,19 +311,36 @@ public class HomePage extends Fragment {
                 title.setText(model.getTitle());
                 store.setText(model.getPrice());
                 price.setText(model.getPrice());
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                    @Override
+                    public void onClickListener(View v) {
+
+                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), product_page.class);
+                        intent.putExtra("Title",model.getTitle());
+                        intent.putExtra("StoreName",model.getStoreName());
+                        intent.putExtra("Price", model.getPrice());
+                        intent.putExtra("Description",model.getDescription());
+                        intent.putExtra("ImageUrl",model.getImageUrl());
+                        intent.putExtra("Details",model.getDetails());
+                        startActivity(intent);
+
+                    }
+                });
+
 
             }
 
             @NonNull
             @Override
             public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_store,parent,false);
                 return new ProductHolder(view);
             }
         };
         watchesAdapter = new FirestoreRecyclerAdapter<Product,ProductHolder>(firestoreRecyclerOptionsWatch) {
             @Override
-            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Product model) {
 
                 title = holder.itemView.findViewById(R.id.product_title);
                 store = holder.itemView.findViewById(R.id.product_store);
@@ -301,20 +351,35 @@ public class HomePage extends Fragment {
                 title.setText(model.getTitle());
                 store.setText(model.getPrice());
                 price.setText(model.getPrice());
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                    @Override
+                    public void onClickListener(View v) {
 
+                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), product_page.class);
+                        intent.putExtra("Title",model.getTitle());
+                        intent.putExtra("StoreName",model.getStoreName());
+                        intent.putExtra("Price", model.getPrice());
+                        intent.putExtra("Description",model.getDescription());
+                        intent.putExtra("ImageUrl",model.getImageUrl());
+                        intent.putExtra("Details",model.getDetails());
+                        startActivity(intent);
+
+                    }
+                });
             }
 
             @NonNull
             @Override
             public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler,parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_store,parent,false);
                 return new ProductHolder(view);
             }
         };
 
         watchRecyclerView.setAdapter(watchesAdapter);
         menRecyclerView.setAdapter(menAdapter);
-        best_selling.setAdapter(suggestionAdapter);
+        shoesRecyclerView.setAdapter(shoesAdapter);
         recyclerView.setAdapter(adapter);
         womanRecyclerView.setAdapter(womanAdapter);
 
@@ -333,10 +398,46 @@ public class HomePage extends Fragment {
         fCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, cart).commit();
+              Intent intent = new Intent(getActivity(), ActivityCart.class);
+              startActivity(intent);
             }
         });
+
+        tSeeWatches.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAct("Watches");
+            }
+        });
+        tSeeShoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAct("Shoes");
+            }
+        });
+
+        tSeeApparelWomen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAct("Apparel For Women");
+            }
+        });
+
+        tSeeApparelMen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAct("Apparel For Men");
+
+            }
+        });
+
+
+    }
+
+    public void startAct(String category){
+        Intent intent = new Intent(getActivity(), HomeHolder.class);
+        intent.putExtra("Category",category);
+        startActivity(intent);
 
     }
 
@@ -349,7 +450,7 @@ public class HomePage extends Fragment {
             startActivity(intent);
             getActivity().finish();
         }
-        suggestionAdapter.startListening();
+        shoesAdapter.startListening();
         menAdapter.startListening();
         womanAdapter.startListening();
         adapter.startListening();
@@ -361,7 +462,7 @@ public class HomePage extends Fragment {
     public void onStop() {
         super.onStop();
         adapter.stopListening();
-        suggestionAdapter.stopListening();
+        shoesAdapter.stopListening();
         menAdapter.stopListening();
         womanAdapter.stopListening();
         watchesAdapter.stopListening();

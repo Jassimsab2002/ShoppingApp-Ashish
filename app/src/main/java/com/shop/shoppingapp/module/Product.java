@@ -6,8 +6,7 @@ public class Product {
 
     public Product (){}
 
-
-    public Product (String Title , String Price , String StoreName , String Description , String ImageUrl , String Details){
+    public Product (String Title , String Price , String StoreName , String Description , String ImageUrl , String Details ){
         this.Title = Title ;
         this.Price = Price ;
         this.StoreName = StoreName ;
@@ -15,6 +14,7 @@ public class Product {
         this.Details = Details ;
         this.ImageUrl = ImageUrl ;
     }
+
     public String getImageUrl(){
         return ImageUrl;
     }

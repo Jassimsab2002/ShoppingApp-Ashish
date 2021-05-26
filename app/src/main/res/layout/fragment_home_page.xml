@@ -43,6 +43,8 @@
                 android:textColor="#00FF55"
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="25dp"
+                android:id="@+id/see_all_watches"
+
                 />
             <TextView
                 android:layout_width="0dp"
@@ -53,7 +55,7 @@
                 app:layout_constraintTop_toBottomOf="@id/forWomenRecyclerView"
                 android:textColor="#000"
                 android:fontFamily="@font/bold"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 />
 
             <TextView
@@ -65,17 +67,19 @@
                 android:textColor="#00FF55"
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="25dp"
+                android:id="@+id/see_all_apparelwomen"
+
                 />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="For Women"
+                android:text="Apparel for Women"
                 android:id="@+id/forWomen"
                 app:layout_constraintLeft_toLeftOf="@id/searching"
                 app:layout_constraintTop_toBottomOf="@id/card2"
                 android:textColor="#000"
                 android:fontFamily="@font/bold"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 />
             <TextView
                 android:id="@+id/textView"
@@ -245,6 +249,7 @@
                 android:textColor="#00FF55"
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="25dp"
+                android:id="@+id/see_all_bestSelling"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -256,6 +261,8 @@
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
+                android:id="@+id/see_all_shoes"
+
                 />
 
             <TextView
@@ -263,53 +270,45 @@
                 android:layout_height="wrap_content"
                 android:text="See All"
                 app:layout_constraintRight_toRightOf="@id/recyclerview"
-                app:layout_constraintTop_toBottomOf="@id/cards"
+                app:layout_constraintTop_toBottomOf="@id/BestSelling_recyclerview"
                 android:textColor="#00FF55"
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/suggestions"
-                android:layout_marginTop="15dp"
-                app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                android:id="@+id/see_all_menAppral"
+
                 />
 
-            <TextView
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/recyclerview"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="4dp"
+                   app:layout_constraintLeft_toLeftOf="@+id/suggestions"
+                   app:layout_constraintTop_toBottomOf="@id/suggestions" />
+
+               <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Suggestions"
+                android:text="Shoes"
                 android:id="@+id/best"
                 app:layout_constraintLeft_toLeftOf="@id/searching"
                 app:layout_constraintTop_toBottomOf="@id/recyclerview"
                 android:textColor="#000"
                 android:fontFamily="@font/bold"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
                 />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Best Selling Product"
-                android:id="@+id/product"
+                android:text="Apparel for Men"
+                android:id="@+id/Men"
                 app:layout_constraintLeft_toLeftOf="@id/searching"
                 app:layout_constraintTop_toBottomOf="@id/BestSelling_recyclerview"
                 android:textColor="#000"
                 android:fontFamily="@font/bold"
-                android:layout_marginTop="15dp"
-                />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="For Men"
-                android:id="@+id/Men"
-                app:layout_constraintLeft_toLeftOf="@id/searching"
-                app:layout_constraintTop_toBottomOf="@id/cards"
-                android:textColor="#000"
-                android:fontFamily="@font/bold"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="25dp"
 
                 />
             <androidx.recyclerview.widget.RecyclerView
@@ -330,74 +329,8 @@
                 />
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cards"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/product"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
-                app:cardBackgroundColor="#F3F3F3"
-                app:cardCornerRadius="25dp"
-                android:elevation="0dp"
-                android:layout_marginTop="15dp"
 
-                >
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/product_image"
-                    android:src="@drawable/image"
-                    />
-            </androidx.cardview.widget.CardView>
-            <TextView
-                android:id="@+id/product_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/cards"
-                app:layout_constraintTop_toTopOf="@id/cards"
-                app:layout_constraintRight_toRightOf="parent"
-                android:text="Apple Watch  Men XR6"
-                android:fontFamily="@font/bold"
-                android:textSize="19dp"
-                android:textColor="#000"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:elevation="5dp"
-                />
-            <TextView
-                android:id="@+id/product_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/cards"
-                app:layout_constraintTop_toBottomOf="@id/product_title"
-                app:layout_constraintRight_toRightOf="parent"
-                android:text="Apple Watch  Men XR6 i was working out and some one came to me and said that he will fuck her i said i will fuck you right now just be sure son of a beach"
-                android:fontFamily="@font/normal"
-                android:textSize="10dp"
-                android:textColor="#68000000"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:elevation="5dp"
-                />
-            <TextView
-                android:id="@+id/see_more"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/cards"
-                app:layout_constraintTop_toBottomOf="@id/product_description"
-                app:layout_constraintRight_toRightOf="parent"
-                android:text="See More"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/bold"
-                android:textSize="13dp"
-                android:textColor="#00FF55"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:elevation="5dp"
-                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

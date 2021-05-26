@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profile.Profile_Activity"></activity>
+        <activity android:name=".Cart.ActivityCart"></activity>
+        <activity android:name=".home.HomeHolder" />
+        <activity android:name=".profile.Profile_Activity" />
         <activity android:name=".lists.Favorite" />
         <activity android:name=".buy.product_page" />
         <activity android:name=".authentification.Info" />

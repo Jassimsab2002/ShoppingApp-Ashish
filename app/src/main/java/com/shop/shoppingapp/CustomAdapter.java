@@ -48,7 +48,7 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = inflater.inflate(R.layout.item_store,parent,false);
+        View view = inflater.inflate(R.layout.item_suggestion,parent,false);
         tTitle = view.findViewById(R.id.product_title);
         tStoreName = view.findViewById(R.id.product_store);
         tPrice = view.findViewById(R.id.product_price);
