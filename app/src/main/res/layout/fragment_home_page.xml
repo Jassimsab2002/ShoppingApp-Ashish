@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".home.HomePage">
         <ScrollView
@@ -13,7 +14,9 @@
             android:layout_width="match_parent"
             android:id="@+id/main_holder"
             android:layout_height="match_parent"
-            >
+               android:focusable="true"
+               android:focusableInTouchMode="true"
+               >
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/forWomenRecyclerView"
                 android:layout_width="match_parent"
@@ -81,8 +84,16 @@
                 android:fontFamily="@font/bold"
                 android:layout_marginTop="25dp"
                 />
+               <FrameLayout
+                   android:layout_width="match_parent"
+                   android:id="@+id/textView"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintRight_toRightOf="parent"
+                   >
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/text_ads"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FF55"
@@ -92,9 +103,8 @@
                 android:paddingVertical="15dp"
                 android:text="Get free product 100%"
                 android:textColor="#fff"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                />
+               </FrameLayout>
 
             <TextView
                 android:id="@+id/Hello"
@@ -152,7 +162,8 @@
                    app:layout_constraintBottom_toBottomOf="@id/user_name"
                    app:layout_constraintDimensionRatio="1:1"
                    app:layout_constraintLeft_toLeftOf="parent"
-                   app:layout_constraintTop_toTopOf="@id/Hello" >
+                   app:layout_constraintTop_toTopOf="@id/Hello"
+                   >
 
                    <ImageView
                        android:layout_width="match_parent"
@@ -209,8 +220,8 @@
                         android:id="@+id/image_ads"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ads"
                         android:scaleType="centerCrop"
+                        android:background="#23000000"
                         />
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
@@ -237,7 +248,8 @@
                         app:layout_constraintDimensionRatio="1.7:1"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ads" />
+                        android:background="#23000000"
+                         />
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
             <TextView

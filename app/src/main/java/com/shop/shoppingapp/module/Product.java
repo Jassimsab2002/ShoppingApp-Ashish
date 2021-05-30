@@ -2,19 +2,28 @@ package com.shop.shoppingapp.module;
 
 public class Product {
 
-    String Title , Price , StoreName , Description , ImageUrl , Details ;
+    String Title , Price , StoreName , Description , ImageUrl , Details , Id ;
 
     public Product (){}
 
-    public Product (String Title , String Price , String StoreName , String Description , String ImageUrl , String Details ){
+    public Product (String Title , String Price , String StoreName , String Description , String ImageUrl , String Details , String Id){
         this.Title = Title ;
         this.Price = Price ;
         this.StoreName = StoreName ;
         this.Description = Description ;
         this.Details = Details ;
         this.ImageUrl = ImageUrl ;
+        this.Id = Id ;
     }
 
+
+    public String getId(){
+        return Id;
+    }
+
+    public void setId(String Id){
+        this.Id = Id ;
+    }
     public String getImageUrl(){
         return ImageUrl;
     }

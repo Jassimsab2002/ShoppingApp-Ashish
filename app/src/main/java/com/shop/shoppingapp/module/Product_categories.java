@@ -9,8 +9,7 @@ public class Product_categories {
     public String getTitle() {
         return Title;
     }
-
     public void setTitle(String title) {
-        Title = title;
+        this.Title = title;
     }
 }

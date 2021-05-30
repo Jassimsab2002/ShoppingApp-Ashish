@@ -93,6 +93,7 @@ public class ActivityCart extends AppCompatActivity {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }

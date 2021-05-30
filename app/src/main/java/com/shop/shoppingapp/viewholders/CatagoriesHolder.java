@@ -18,12 +18,12 @@ public class CatagoriesHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private ProductHolder.ClickListener mClickListener ;
+    private CatagoriesHolder.ClickListener mClickListener ;
     public interface ClickListener{
         public void onClickListener(View v);
     }
 
-    public void setOnClickListener(ProductHolder.ClickListener clickListener){
+    public void setOnClickListener(CatagoriesHolder.ClickListener clickListener){
         mClickListener = clickListener ;
     }
 

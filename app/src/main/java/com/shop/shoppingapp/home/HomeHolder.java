@@ -77,6 +77,7 @@ public class HomeHolder extends AppCompatActivity {
                               , documentSnapshot.get("Description").toString()
                               , documentSnapshot.get("ImageUrl").toString()
                               , documentSnapshot.get("Details").toString()
+                              ,documentSnapshot.getId()
                       ));
                   }
               }

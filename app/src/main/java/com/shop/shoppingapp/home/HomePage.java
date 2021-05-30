@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +42,9 @@ import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.buy.ProductImagesAdapter;
 import com.shop.shoppingapp.buy.product_page;
 import com.shop.shoppingapp.lists.Favorite;
+import com.shop.shoppingapp.lists.Notification_List;
 import com.shop.shoppingapp.module.Product;
+import com.shop.shoppingapp.profile.Settings_Profile;
 import com.shop.shoppingapp.viewholders.ProductHolder;
 public class HomePage extends Fragment {
 
@@ -58,9 +64,10 @@ public class HomePage extends Fragment {
     public HomePage() {
     }
 
+    Animation aDownUp , aLeftRight , aRightLeft , aRepeating;
     FirebaseUser user ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    TextView tUserName , tSeeShoes , tSeeApparelMen , tSeeApparelWomen, tSeeWatches  ;
+    TextView tUserName , tSeeShoes , tSeeApparelMen , tSeeApparelWomen, tSeeWatches , tHello , tSuggestions , tBest , tSell_All_Best_Selling  , tAds;
     String sName ;
     RecyclerView recyclerView , shoesRecyclerView , menRecyclerView ,womanRecyclerView ,watchRecyclerView ;
     LinearLayoutManager layoutManager ,layoutManagerSuggestions ,menLayoutManager , womanLayoutManager ,watchesLayoutManager ;
@@ -74,6 +81,8 @@ public class HomePage extends Fragment {
     FragmentTransaction transaction ;
     ProductImagesAdapter productImagesAdapter ;
     NavigationView navigationView ;
+    EditText eSearch ;
+    CardView cardView ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,9 +107,38 @@ public class HomePage extends Fragment {
         tSeeApparelWomen = view.findViewById(R.id.see_all_apparelwomen);
         tSeeShoes = view.findViewById(R.id.see_all_shoes);
         tSeeWatches = view.findViewById(R.id.see_all_watches);
-        setOnClicks();
+        eSearch = view.findViewById(R.id.searching);
+        tHello = view.findViewById(R.id.Hello);
+        cardView = view.findViewById(R.id.card);
+        tSuggestions = view.findViewById(R.id.suggestions);
+        tBest= view.findViewById(R.id.best);
+        tSell_All_Best_Selling = view.findViewById(R.id.see_all_bestSelling);
+        tAds = view.findViewById(R.id.text_ads);
 
+        setOnClicks();
         tUserName.setText(sName);
+
+        //Animation
+        aDownUp = AnimationUtils.loadAnimation(getContext(),R.anim.down_up);
+        tHello.startAnimation(aDownUp);
+        tUserName.startAnimation(aDownUp);
+        eSearch.startAnimation(aDownUp);
+        cardView.startAnimation(aDownUp);
+
+        aLeftRight = AnimationUtils.loadAnimation(getContext(),R.anim.left_right);
+        fMenu.startAnimation(aLeftRight);
+        tBest.startAnimation(aLeftRight);
+        recyclerView.startAnimation(aLeftRight);
+        menRecyclerView.startAnimation(aLeftRight);
+        womanRecyclerView.startAnimation(aLeftRight);
+        shoesRecyclerView.startAnimation(aLeftRight);
+        tSuggestions.startAnimation(aLeftRight);
+        aRightLeft = AnimationUtils.loadAnimation(getContext(),R.anim.right_left);
+        fCart.startAnimation(aRightLeft);
+        tSell_All_Best_Selling.startAnimation(aRightLeft);
+
+        aRepeating = AnimationUtils.loadAnimation(getContext(),R.anim.ads_repeating);
+        tAds.startAnimation(aRepeating);
 
         //Ads
         firestore.collection("Ads").document("1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -159,17 +197,29 @@ public class HomePage extends Fragment {
                         break;
 
                     case R.id.account:
+                        Intent dIntent =  new Intent(getActivity(), Settings_Profile.class);
+                        startActivity(dIntent);
                         break;
+
+                    case R.id.notification :
+                        Intent nIntent =  new Intent(getActivity(), Notification_List.class);
+                        startActivity(nIntent);
+                        break;
+
+
                 }
                 return true;
             }
         });
+
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(shoesQuery,Product.class)
                 .build();
+
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptionsMen = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(menQuery ,Product.class)
                 .build();
+
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptionsWoman = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(womanQuery ,Product.class)
                 .build();
@@ -177,6 +227,7 @@ public class HomePage extends Fragment {
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptionsWatch = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(watchesQuery ,Product.class)
                 .build();
+
 
         adapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(firestoreRecyclerOptions) {
             @Override
@@ -189,13 +240,12 @@ public class HomePage extends Fragment {
 
                 Glide.with(getContext()).load(model.getImageUrl()).into(image);
                 title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
+                store.setText(model.getStoreName());
+                price.setText(model.getPrice() + "$");
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
 
-                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), product_page.class);
                         intent.putExtra("Title",model.getTitle());
                         intent.putExtra("StoreName",model.getStoreName());
@@ -203,6 +253,7 @@ public class HomePage extends Fragment {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }
@@ -229,13 +280,12 @@ public class HomePage extends Fragment {
 
                 Glide.with(getContext()).load(model.getImageUrl()).into(image);
                 title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
+                store.setText(model.getStoreName());
+                price.setText(model.getPrice() + "$");
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
 
-                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), product_page.class);
                         intent.putExtra("Title",model.getTitle());
                         intent.putExtra("StoreName",model.getStoreName());
@@ -243,6 +293,7 @@ public class HomePage extends Fragment {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }
@@ -269,13 +320,11 @@ public class HomePage extends Fragment {
 
                 Glide.with(getContext()).load(model.getImageUrl()).into(image);
                 title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
+                store.setText(model.getStoreName());
+                price.setText(model.getPrice() + "$");
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
-
-                        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), product_page.class);
                         intent.putExtra("Title",model.getTitle());
                         intent.putExtra("StoreName",model.getStoreName());
@@ -283,6 +332,7 @@ public class HomePage extends Fragment {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }
@@ -309,8 +359,8 @@ public class HomePage extends Fragment {
 
                 Glide.with(getContext()).load(model.getImageUrl()).into(image);
                 title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
+                store.setText(model.getStoreName());
+                price.setText(model.getPrice() + "$");
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
@@ -323,6 +373,7 @@ public class HomePage extends Fragment {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }
@@ -349,8 +400,8 @@ public class HomePage extends Fragment {
 
                 Glide.with(getContext()).load(model.getImageUrl()).into(image);
                 title.setText(model.getTitle());
-                store.setText(model.getPrice());
-                price.setText(model.getPrice());
+                store.setText(model.getStoreName());
+                price.setText(model.getPrice() + "$");
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
@@ -363,6 +414,7 @@ public class HomePage extends Fragment {
                         intent.putExtra("Description",model.getDescription());
                         intent.putExtra("ImageUrl",model.getImageUrl());
                         intent.putExtra("Details",model.getDetails());
+                        intent.putExtra("Id",model.getId());
                         startActivity(intent);
 
                     }
@@ -423,6 +475,12 @@ public class HomePage extends Fragment {
             }
         });
 
+        tSell_All_Best_Selling.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAct("Best Selling");
+            }
+        });
         tSeeApparelMen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -430,7 +488,6 @@ public class HomePage extends Fragment {
 
             }
         });
-
 
     }
 

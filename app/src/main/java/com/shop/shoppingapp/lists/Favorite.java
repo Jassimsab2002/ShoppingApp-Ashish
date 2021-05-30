@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,6 +30,7 @@ public class Favorite extends AppCompatActivity {
     CustomAdapter adapter ;
     ArrayList<Product> arrayList ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class Favorite extends AppCompatActivity {
         //GridView
         arrayList =  new ArrayList<>();
         adapter = new CustomAdapter(arrayList,this,getLayoutInflater());
-        firestore.collection("Product").whereEqualTo("Favorite",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("Product").whereEqualTo("Favorite" + firebaseUser.getUid() ,true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -61,6 +64,7 @@ public class Favorite extends AppCompatActivity {
                                     , documentSnapshot.get("Description").toString()
                                     , documentSnapshot.get("ImageUrl").toString()
                                     , documentSnapshot.get("Details").toString()
+                                    , documentSnapshot.getId()
                             ));
                         }
                     }

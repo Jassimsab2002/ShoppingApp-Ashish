@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Cart.ActivityCart"></activity>
+        <activity android:name=".search.Srearch_Activity"></activity>
+        <activity android:name=".lists.Notification_List" />
+        <activity android:name=".profile.MyOrders_Change" />
+        <activity android:name=".profile.Security_Change" />
+        <activity android:name=".profile.Settings_Profile" />
+        <activity android:name=".Cart.ActivityCart" />
         <activity android:name=".home.HomeHolder" />
         <activity android:name=".profile.Profile_Activity" />
         <activity android:name=".lists.Favorite" />
@@ -24,6 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".notification.NotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
