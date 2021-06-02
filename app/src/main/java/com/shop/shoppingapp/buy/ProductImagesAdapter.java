@@ -42,4 +42,8 @@ public class ProductImagesAdapter extends PagerAdapter {
         return imageView;
     }
 
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+
+    }
 }

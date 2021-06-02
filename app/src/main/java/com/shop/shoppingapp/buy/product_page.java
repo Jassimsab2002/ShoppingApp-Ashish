@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -44,7 +45,7 @@ public class product_page extends AppCompatActivity {
     Intent intent ;
     TextView tStoreName , tProductTitle , tProductPrice , tProductDetails ,tAddToCart , tReviewTitle , tReviewDescription ,tProductDiscount;
     String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductImage , sProductDetails , sId;
-    ImageView iSend , iFavorite , iBack ;
+    ImageView iSend , iFavorite , iBack , iLeft , iRight;
     CardView cAddToCart , cBuyNow;
     String sProductShare = "";
     ViewPager vProductImages ;
@@ -58,6 +59,7 @@ public class product_page extends AppCompatActivity {
     RatingBar ratingBar ;
     Animation aDown_Up , aLeft_Right , aRight_Left ;
     FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
+    ArrayList<String> aImages ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class product_page extends AppCompatActivity {
         vProductImages = findViewById(R.id.product_image);
         iSend = findViewById(R.id.Send);
         iFavorite = findViewById(R.id.favorite);
+        iRight = findViewById(R.id.right);
+        iLeft = findViewById(R.id.left);
         iBack = findViewById(R.id.back);
         cAddToCart = findViewById(R.id.cardView2);
         cBuyNow = findViewById(R.id.cardView);
@@ -198,8 +202,38 @@ public class product_page extends AppCompatActivity {
                 return new ProductHolder(view);
             }
         };
-
         rReview.setAdapter(faReviews);
+
+        //ImageView
+        aImages = new ArrayList<>();
+        firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                    getData(documentSnapshot.getReference());
+                }
+            }
+        });
+
+    }
+
+    private void getData(DocumentReference documentSnapshot) {
+        documentSnapshot.collection("Images")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot dDocumentSnapshot : queryDocumentSnapshots){
+                            aImages.add((String) dDocumentSnapshot.get("Image"));
+                            productImagesAdapter = new ProductImagesAdapter(product_page.this,aImages);
+                            vProductImages.setAdapter(productImagesAdapter);
+                        }
+                        if (aImages.size() != 0){
+                            iLeft.setVisibility(View.VISIBLE);
+                            iRight.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     private void update(DocumentSnapshot documentSnapshot, String favorite , final boolean value) {
@@ -224,17 +258,12 @@ public class product_page extends AppCompatActivity {
     public void fetchData(){
 
         if (intent != null){
-           ArrayList<String> images =  new ArrayList<>();
            sStoreName = intent.getStringExtra("StoreName");
            sProductTitle = intent.getStringExtra("Title");
            sProductPrice = intent.getStringExtra("Price");
            sProductDescription = intent.getStringExtra("Description");
            sProductDetails = intent.getStringExtra("Details");
-           sProductImage = intent.getStringExtra("ImageUrl");
            sId = intent.getStringExtra("Id");
-           images.add(sProductImage);
-           productImagesAdapter = new ProductImagesAdapter(this,images);
-           vProductImages.setAdapter(productImagesAdapter);
            tProductDetails.setText(sProductDetails);
            tStoreName.setText(sStoreName);
            tProductTitle.setText(sProductTitle);

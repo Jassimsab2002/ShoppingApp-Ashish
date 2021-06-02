@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".search.Srearch_Activity"></activity>
+        <activity android:name=".search.Search_Result"></activity>
+        <activity android:name=".search.Srearch_Activity" />
         <activity android:name=".lists.Notification_List" />
         <activity android:name=".profile.MyOrders_Change" />
         <activity android:name=".profile.Security_Change" />

@@ -54,6 +54,7 @@ public class Srearch_Activity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                arrayList = new ArrayList<>();
                 search(eSearch.getText().toString().trim());
             }
 
@@ -77,13 +78,7 @@ public class Srearch_Activity extends AppCompatActivity {
     }
 
     private void search(String text) {
-       ArrayList<String> cText = new ArrayList<>();
-       String[] sText = text.split("sText");
-       for (String chracter : sText){
-           cText.add(chracter);
-
-       }
-        firestore.collection("Product").whereArrayContains("Keyword",cText).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("Product").whereArrayContains("Keyword",text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -98,7 +93,7 @@ public class Srearch_Activity extends AppCompatActivity {
                                 ,documentSnapshot.getId()
                         ));
                     }
-                    search_adapter = new Search_Adapter(arrayList);
+                    search_adapter = new Search_Adapter(arrayList,Srearch_Activity.this);
                     recyclerView.setAdapter(search_adapter);
                 }else{}
             }

@@ -187,6 +187,8 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="22dp"
                 android:textColorHint="#34000000"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
             <TextView
