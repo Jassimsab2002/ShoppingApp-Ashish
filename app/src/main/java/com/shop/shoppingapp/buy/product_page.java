@@ -135,7 +135,8 @@ public class product_page extends AppCompatActivity {
         cBuyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(product_page.this,Checkout_first_step.class);
+                startActivity(intent);
             }
         });
 

@@ -68,7 +68,7 @@
             app:layout_constraintRight_toRightOf="@id/product_title"
             android:textSize="13dp"
             android:fontFamily="@font/bold"
-            android:textColor="#00FF55"
+            android:textColor="@color/colorPrimary"
             android:paddingHorizontal="10dp"
 
             />

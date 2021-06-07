@@ -39,7 +39,7 @@ public class Search_Result extends AppCompatActivity {
 
         //findViews
         iBack = findViewById(R.id.back);
-        tTitle = findViewById(R.id.textview_search);0
+        tTitle = findViewById(R.id.textview_search);
         gSearch = findViewById(R.id.gridView);
 
         //get-setData

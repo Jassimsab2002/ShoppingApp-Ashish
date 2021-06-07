@@ -2,14 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shop.shoppingapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".search.Search_Result"></activity>
+        <activity android:name=".buy.Checkout_last_step"></activity>
+        <activity android:name=".buy.Checkout_first_step" />
+        <activity android:name=".search.Search_Result" />
         <activity android:name=".search.Srearch_Activity" />
         <activity android:name=".lists.Notification_List" />
         <activity android:name=".profile.MyOrders_Change" />

@@ -9,12 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.home.HomePage;
 import com.shop.shoppingapp.profile.Profile_Fragment;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,10 +26,12 @@ public class MainActivity extends AppCompatActivity {
     Profile_Fragment profile_fragment ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (firebaseAuth.getCurrentUser() != null) {
             sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);

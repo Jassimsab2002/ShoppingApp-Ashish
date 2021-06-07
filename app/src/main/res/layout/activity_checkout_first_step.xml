@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".buy.Checkout_first_step">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place an order"
+        android:fontFamily="@font/bold"
+        app:layout_constraintLeft_toRightOf="@id/back"
+        app:layout_constraintTop_toTopOf="@id/back"
+        app:layout_constraintBottom_toBottomOf="@id/back"
+        android:textSize="22dp"
+        android:textColor="#000"
+        android:layout_marginLeft="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact"
+        android:fontFamily="@font/bold"
+        app:layout_constraintLeft_toLeftOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        android:textSize="18dp"
+        android:textColor="#D0000000"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="7dp"
+        android:id="@+id/title_contact"
+        />
+
+    <EditText
+        android:id="@+id/edittext_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_contact"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="Name"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        />
+
+    <EditText
+        android:id="@+id/edittext_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/edittext_name"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="Phone number"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:fontFamily="@font/bold"
+        app:layout_constraintLeft_toLeftOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/edittext_number"
+        android:textSize="18dp"
+        android:textColor="#D0000000"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="7dp"
+        android:id="@+id/title_address"
+        />
+
+    <EditText
+        android:id="@+id/edittext_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_address"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="Street, house/apartment/unit "
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/edittext_location"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_selected"
+        android:layout_marginHorizontal="20dp"
+        android:paddingHorizontal="20dp"
+        android:popupBackground="@drawable/edit_text_selected"
+        android:id="@+id/spinner_country"
+        />
+    <EditText
+        android:id="@+id/edittext_zipcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/spinner_country"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="Zip Code"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment"
+        android:fontFamily="@font/bold"
+        app:layout_constraintLeft_toLeftOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/edittext_zipcode"
+        android:textSize="18dp"
+        android:textColor="#D0000000"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="7dp"
+        android:id="@+id/payment"
+        />
+    <com.stripe.android.view.CardInputWidget
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/card"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/payment"
+        />
+
+
+
+    <FrameLayout
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/colorPrimary"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Place order now."
+            android:fontFamily="@font/bold"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:layout_marginVertical="15dp"
+            android:textColor="#fff"
+            />
+    </FrameLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
