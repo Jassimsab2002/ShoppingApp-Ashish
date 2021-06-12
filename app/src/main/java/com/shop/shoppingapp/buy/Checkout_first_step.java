@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,6 +29,8 @@ import com.stripe.android.model.PaymentMethodCreateParams;
 import com.stripe.android.model.StripeIntent;
 import com.stripe.android.view.CardInputWidget;
 
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -53,183 +58,71 @@ public class Checkout_first_step extends AppCompatActivity {
     Spinner sCountry ;
     ArrayAdapter<CharSequence> arrayAdapter ;
     String[] sItems = new String[]{"India","US","Morocco"};
-    private static final String BACKEND_URL = "https://stripe-pipay.herokuapp.com";
-    private OkHttpClient httpClient = new OkHttpClient();
-    private String paymentIntentClientSecret ;
-    private Stripe stripe ;
+    ProgressBar progressBar ;
+    EditText eName , eNumber ,  eAddress , eZipCode ;
+    String sName , sNumber ,  sAddress , sZipCode , sSCountry , sPrice , sId ;
+    Intent intent ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_first_step);
 
+
         //findViews
         sCountry = findViewById(R.id.spinner_country);
         fSave = findViewById(R.id.save);
-        cardInputWidget = findViewById(R.id.card);
+        progressBar = findViewById(R.id.progress_bar);
+        eName = findViewById(R.id.edittext_name);
+        eNumber = findViewById(R.id.edittext_number);
+        eAddress = findViewById(R.id.edittext_location);
+        eZipCode = findViewById(R.id.edittext_zipcode);
+
+        //Intent
+        intent = getIntent();
+        sPrice = intent.getStringExtra("Price");
+        sId = intent.getStringExtra("Id");
+
+
+        //Progress
+        progressBar.setVisibility(View.INVISIBLE);
 
         //Spinner Work
         arrayAdapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_dropdown_item_1line,sItems);
         sCountry.setAdapter(arrayAdapter);
+        sCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sSCountry = sItems[position];
+            }
 
-        //Stripe Work
-        stripe = new Stripe(
-                getApplicationContext(),
-                Objects.requireNonNull("pk_test_51IxrgNIs1nmQac7AujyYLOSm73ZDYKyfyiP09iTS4lte1Ti0VoWabbjhTENgoCRxBmwNwZ5mwebcVZz9giexfFVW00ApsIJwy1")
-
-        );
-
-         startCheckout();
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                sSCountry = null ;
+            }
+        });
 
         //setOnClicks
         fSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                progressBar.setVisibility(View.VISIBLE);
+                sName = eName.getText().toString().trim();
+                sNumber = eNumber.getText().toString().trim();
+                sAddress = eAddress.getText().toString().trim();
+                sZipCode = eZipCode.getText().toString().trim();
 
-                PaymentMethodCreateParams params = cardInputWidget.getPaymentMethodCreateParams();
-
-                if (params != null){
-
-                    ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                            .createWithPaymentMethodCreateParams(params,paymentIntentClientSecret);
-                    stripe.confirmPayment(Checkout_first_step.this, confirmParams);
-
+                if(! sNumber.isEmpty() && ! sName.isEmpty() && ! sAddress.isEmpty() && ! sZipCode.isEmpty() && ! sSCountry.isEmpty()){
+                   Intent intent = new Intent(Checkout_first_step.this ,Checkout_last_step.class);
+                   intent.putExtra("Address",sAddress);
+                   intent.putExtra("Price",sPrice);
+                   intent.putExtra("Id",sId);
+                   startActivity(intent);
+                }else{
+                    Toast.makeText(Checkout_first_step.this, "One of the fields is empty.", Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void startCheckout() {
-        MediaType mediaType = MediaType.get("application/json; charset=utf-8");
-
-
-        /*
-        String json = "{"
-                +"\"currency\":\"usd\","
-                +"\"items\":["
-                +"\"id\":\"photo_subscription\"}"
-                +"]"
-                +"}";
-*/
-
-
-
-
-        double amount = 05.25 ;
-        Map<String,Object> payMap = new HashMap<>();
-        Map<String,Object> itemMap = new HashMap<>();
-        List<Map<String,Object>> itemList = new ArrayList<>();
-        payMap.put("currency","usd");
-        itemMap.put("id","photo_subscription");
-        itemMap.put("amount",amount);
-        itemList.add(itemMap);
-        payMap.put("items",itemList);
-        String json = new Gson().toJson(payMap);
-
-
-        RequestBody body = RequestBody.create(json, mediaType);
-        Request request = new Request.Builder()
-                .url(BACKEND_URL + "/create-payment-intent")
-                .post(body)
-                .build();
-
-       
-        httpClient.newCall(request)
-                .enqueue(new PayCallBack(this));
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        stripe.onPaymentResult(requestCode,data,new PaymentResultCallback(this));
-    }
-
-    private static final class PaymentResultCallback implements ApiResultCallback<PaymentIntentResult>{
-        private final WeakReference<Checkout_first_step> activityRef ;
-        PaymentResultCallback( Checkout_first_step activityRef){
-            this.activityRef = new WeakReference<>(activityRef);
-        }
-        @Override
-        public void onError(@NotNull Exception e) {
-
-        }
-
-        @Override
-        public void onSuccess(PaymentIntentResult paymentIntentResult) {
-            final Checkout_first_step activity = activityRef.get();
-            if (activity == null){
-                return;
-            }
-            PaymentIntent paymentIntent = paymentIntentResult.getIntent();
-            PaymentIntent.Status status = paymentIntent.getStatus();
-
-            if (status == PaymentIntent.Status.Succeeded){
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            }
-
-
-        }
-    }
-    private static final class PayCallBack implements Callback{
-
-        @NonNull private final WeakReference<Checkout_first_step> activityRef;
-        public PayCallBack(Checkout_first_step checkout_first_step) {
-            activityRef = new WeakReference<>(checkout_first_step);
-        }
-
-        @Override
-        public void onFailure(@NotNull Call call, @NotNull final IOException e) {
-            final Checkout_first_step activity = activityRef.get();
-            if (activity == null){
-                return;
-            }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity,"Error CallBack Failure: " + e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        @Override
-        public void onResponse(@NotNull Call call, @NotNull final Response response)
-                throws IOException {
-
-                final Checkout_first_step activity = activityRef.get();
-                if (activity == null){
-                    return;
-                }
-
-                if (!response.isSuccessful()){
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, "Error response not successful: " + response.message() , Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else{
-                    activity.onPaymentSuccess(response);
-                }
-            }
-        }
-
-
-    private void onPaymentSuccess(Response response) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<String,String>>(){}.getType();
-        Map<String,String> responseMap = null;
-        try {
-            responseMap = gson.fromJson(
-                    Objects.requireNonNull(response.body()).string(),
-                    type
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        paymentIntentClientSecret = responseMap.get("clientSecret");
-
     }
 }

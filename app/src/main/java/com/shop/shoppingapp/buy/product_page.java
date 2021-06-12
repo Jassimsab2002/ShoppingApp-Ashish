@@ -136,6 +136,8 @@ public class product_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(product_page.this,Checkout_first_step.class);
+                intent.putExtra("Price",sProductPrice);
+                intent.putExtra("Id",sId);
                 startActivity(intent);
             }
         });
@@ -250,7 +252,6 @@ public class product_page extends AppCompatActivity {
                   iFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
               }
            }else{
-
            }
             }
         });
@@ -259,6 +260,7 @@ public class product_page extends AppCompatActivity {
     public void fetchData(){
 
         if (intent != null){
+
            sStoreName = intent.getStringExtra("StoreName");
            sProductTitle = intent.getStringExtra("Title");
            sProductPrice = intent.getStringExtra("Price");
@@ -269,6 +271,7 @@ public class product_page extends AppCompatActivity {
            tStoreName.setText(sStoreName);
            tProductTitle.setText(sProductTitle);
            tProductPrice.setText(sProductPrice + "$");
+
         }
 
     }

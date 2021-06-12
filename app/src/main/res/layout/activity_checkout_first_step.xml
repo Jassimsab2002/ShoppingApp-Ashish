@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".buy.Checkout_first_step">
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:elevation="5dp"
+        android:padding="100dp"
+        android:id="@+id/progress_bar"
+        android:visibility="invisible"
+        />
     <ImageView
         android:id="@+id/back"
         android:layout_width="40dp"
@@ -120,29 +129,7 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="12dp"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Payment"
-        android:fontFamily="@font/bold"
-        app:layout_constraintLeft_toLeftOf="@id/back"
-        app:layout_constraintTop_toBottomOf="@id/edittext_zipcode"
-        android:textSize="18dp"
-        android:textColor="#D0000000"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="7dp"
-        android:id="@+id/payment"
-        />
-    <com.stripe.android.view.CardInputWidget
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/card"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/payment"
-        />
+
 
 
 
