@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".buy.Order_Received">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="15dp"
+        />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="To confirm order receive please add a comment."
+        android:fontFamily="@font/bold"
+        app:layout_constraintLeft_toLeftOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        android:layout_marginTop="25dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        android:textSize="22dp"
+        android:textColor="#000"
+        android:layout_marginLeft="7dp"
+
+
+        />
+
+    <EditText
+        android:id="@+id/edittext_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="I think this product is..."
+        app:layout_constraintTop_toBottomOf="@id/title"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="15dp"
+        android:fontFamily="@font/bold"
+        android:textColorHint="#2C000000"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="20dp"/>
+    <EditText
+        android:id="@+id/edittext_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/edit_text_selected"
+        android:hint="On 10 I rate this product..."
+        app:layout_constraintTop_toBottomOf="@id/edittext_comment"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="15dp"
+        android:fontFamily="@font/bold"
+        android:textColorHint="#2C000000"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:inputType="number"
+        android:layout_marginTop="10dp"/>
+
+
+    <FrameLayout
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/colorPrimary"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Product Received."
+            android:fontFamily="@font/bold"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:layout_marginVertical="15dp"
+            android:textColor="#fff"
+            />
+    </FrameLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

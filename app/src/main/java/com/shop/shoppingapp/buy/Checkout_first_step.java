@@ -60,7 +60,7 @@ public class Checkout_first_step extends AppCompatActivity {
     String[] sItems = new String[]{"India","US","Morocco"};
     ProgressBar progressBar ;
     EditText eName , eNumber ,  eAddress , eZipCode ;
-    String sName , sNumber ,  sAddress , sZipCode , sSCountry , sPrice , sId ;
+    String sName , sNumber ,  sAddress , sZipCode , sSCountry , sPrice , sId , sImage , sTitle ;
     Intent intent ;
 
     @Override
@@ -82,7 +82,8 @@ public class Checkout_first_step extends AppCompatActivity {
         intent = getIntent();
         sPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
-
+        sImage = intent.getStringExtra("Image");
+        sTitle = intent.getStringExtra("Title");
 
         //Progress
         progressBar.setVisibility(View.INVISIBLE);
@@ -118,7 +119,10 @@ public class Checkout_first_step extends AppCompatActivity {
                    intent.putExtra("Address",sAddress);
                    intent.putExtra("Price",sPrice);
                    intent.putExtra("Id",sId);
-                   startActivity(intent);
+                   intent.putExtra("Image",sImage);
+                   intent.putExtra("Title",sTitle);
+                    startActivity(intent);
+                    finish();
                 }else{
                     Toast.makeText(Checkout_first_step.this, "One of the fields is empty.", Toast.LENGTH_LONG).show();
                 }

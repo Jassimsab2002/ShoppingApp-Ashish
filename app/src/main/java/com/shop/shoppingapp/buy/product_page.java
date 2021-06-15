@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -138,6 +139,8 @@ public class product_page extends AppCompatActivity {
                 Intent intent = new Intent(product_page.this,Checkout_first_step.class);
                 intent.putExtra("Price",sProductPrice);
                 intent.putExtra("Id",sId);
+                intent.putExtra("Image",aImages.get(0));
+                intent.putExtra("Title",sProductTitle);
                 startActivity(intent);
             }
         });

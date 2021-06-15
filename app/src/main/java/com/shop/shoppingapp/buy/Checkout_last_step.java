@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -24,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
+import com.shop.shoppingapp.profile.MyOrders_Change;
 import com.stripe.android.ApiResultCallback;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.PaymentIntentResult;
@@ -38,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -61,9 +65,10 @@ public class Checkout_last_step extends AppCompatActivity {
     private Stripe stripe ;
     static ProgressBar progressBar ;
     FrameLayout fPay ;
-    static String sAddress , sTotalPrice , sProductPrice , sShippingPrice , sId ;
+    static String sAddress , sTotalPrice , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId ;
     Intent intent ;
     static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +89,17 @@ public class Checkout_last_step extends AppCompatActivity {
         sAddress = intent.getStringExtra("Address");
         sProductPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
+        sTitle = intent.getStringExtra("Title");
+        sImage = intent.getStringExtra("Image");
 
 
         //setInfo
         tAddress.setText(sAddress);
         tPPrice.setText(sProductPrice);
 
+
+        //User Info
+        sUserId = firebaseAuth.getUid();
 
         //Stripe Work
         stripe = new Stripe(
@@ -109,7 +119,6 @@ public class Checkout_last_step extends AppCompatActivity {
                     ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
                             .createWithPaymentMethodCreateParams(params,paymentIntentClientSecret);
                     stripe.confirmPayment(Checkout_last_step.this, confirmParams);
-
                 }
             }
         });
@@ -176,19 +185,23 @@ public class Checkout_last_step extends AppCompatActivity {
 
             if (status == PaymentIntent.Status.Succeeded){
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                firestore.collection("Product").whereEqualTo("Id",sId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                   for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                       HashMap<String,Object> hashMap = new HashMap<>();
+                Date dNow = new Date();
+                SimpleDateFormat ft = new SimpleDateFormat("yyMMddhhmmssMs");
+                String datetime = ft.format(dNow);
+                HashMap<String,Object> hashMap = new HashMap<>();
                        hashMap.put("Address",sAddress);
                        hashMap.put("Shipping",sShippingPrice);
-                       documentSnapshot.getReference().collection("Orders").document().set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                       hashMap.put("Image",sImage);
+                       hashMap.put("ProductId",sId);
+                       hashMap.put("BuyerId",sUserId);
+                       hashMap.put("Title",sTitle);
+                       hashMap.put("Price",sProductPrice);
+                       hashMap.put("OrderId",datetime);
+                     firestore.collection("Orders").document().set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                            @Override
                            public void onComplete(@NonNull Task<Void> task) {
                                if (task.isSuccessful()){
-                                   Toast.makeText(activity, "Your order is successful check it on account/profile.", Toast.LENGTH_SHORT).show();
-                                   Intent intent = new Intent(Checkout_last_step.this, MainActivity.class);
+                                   Intent intent = new Intent(Checkout_last_step.this, MyOrders_Change.class);
                                    startActivity(intent);
                                    finish();
                                }else{}
@@ -196,13 +209,11 @@ public class Checkout_last_step extends AppCompatActivity {
                        });
                    }
                     }
-                });
 
             }
 
 
-        }
-    }
+
     private static final class PayCallBack implements Callback {
 
         @NonNull
