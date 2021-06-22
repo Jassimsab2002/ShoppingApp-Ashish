@@ -2,16 +2,21 @@ package com.shop.shoppingapp.module;
 
 public class Orders  {
 
-    String Image , UserId , Title , Arrive , Price , OrderId ;
+    String Image , UserId , Title , Arrive , Price , OrderId , ProductId ;
 
     public Orders () {}
-    public Orders (String Image , String UserId , String Title , String Arrive , String Price , String OrderId){
+    public Orders (String Image , String UserId , String Title , String Arrive , String Price , String OrderId , String ProductId){
         this.Image = Image ;
         this.UserId = UserId ;
         this.Title = Title ;
         this.Arrive = Arrive ;
         this.Price = Price ;
         this.OrderId = OrderId;
+        this.ProductId = ProductId ;
+    }
+    public String getProductId(){return ProductId ;}
+    public void setProductId(String ProductId){
+        this.ProductId = ProductId ;
     }
     public String getImage() {
         return Image;

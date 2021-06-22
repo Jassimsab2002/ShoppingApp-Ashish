@@ -25,21 +25,33 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences ;
     Profile_Fragment profile_fragment ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
+    Intent intent ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         if (firebaseAuth.getCurrentUser() != null) {
+            intent = getIntent();
             sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
             homePage = new HomePage(sharedPreferences);
             storePage = new StorePage();
             profile_fragment = new Profile_Fragment(sharedPreferences);
-            transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.container, homePage).commit();
+            if (intent != null){
+                String Type = intent.getStringExtra("Type") ;
+                if ( Type != null){
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.container, storePage).commit();
+                }else{
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.container, homePage).commit();
+                }
+            }else{
+                transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.container, homePage).commit();
+            }
+
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

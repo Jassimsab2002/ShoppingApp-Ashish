@@ -43,6 +43,12 @@ public class Notification_List extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         qNotification = firestore.collection("Notification");
 
+        iBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notification_List.super.onBackPressed();
+            }
+        });
 
         firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Notification>()
                 .setQuery(qNotification, Notification.class)

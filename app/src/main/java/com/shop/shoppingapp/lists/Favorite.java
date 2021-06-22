@@ -60,7 +60,7 @@ public class Favorite extends AppCompatActivity {
                             arrayList.add(new Product(
                                     documentSnapshot.get("Title").toString()
                                     , documentSnapshot.get("Price").toString()
-                                    , documentSnapshot.get("Store").toString()
+                                    , documentSnapshot.get("StoreName").toString()
                                     , documentSnapshot.get("Description").toString()
                                     , documentSnapshot.get("ImageUrl").toString()
                                     , documentSnapshot.get("Details").toString()

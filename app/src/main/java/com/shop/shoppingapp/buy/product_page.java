@@ -15,13 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.shop.shoppingapp.R;
-import com.shop.shoppingapp.module.Product;
+
 import com.shop.shoppingapp.module.Reviews;
 import com.shop.shoppingapp.viewholders.ProductHolder;
 
@@ -44,14 +42,14 @@ import java.util.ArrayList;
 public class product_page extends AppCompatActivity {
 
     Intent intent ;
-    TextView tStoreName , tProductTitle , tProductPrice , tProductDetails ,tAddToCart , tReviewTitle , tReviewDescription ,tProductDiscount;
-    String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductImage , sProductDetails , sId;
-    ImageView iSend , iFavorite , iBack , iLeft , iRight;
-    CardView cAddToCart , cBuyNow;
-    String sProductShare = "";
+    TextView tStoreName , tProductTitle , tProductPrice , tProductDetails ,tAddToCart , tReviewTitle , tReviewDescription , tProductDiscount ;
+    String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductDetails , sId ;
+    ImageView iSend , iFavorite , iBack , iLeft , iRight ;
+    CardView cAddToCart , cBuyNow ;
+    String sProductShare = "" ;
     ViewPager vProductImages ;
     ProductImagesAdapter productImagesAdapter ;
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance() ;
     RecyclerView rReview ;
     LinearLayoutManager layoutManager ;
     Query qReviews ;
@@ -59,8 +57,9 @@ public class product_page extends AppCompatActivity {
     FirestoreRecyclerAdapter faReviews ;
     RatingBar ratingBar ;
     Animation aDown_Up , aLeft_Right , aRight_Left ;
-    FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
-    ArrayList<String> aImages ;
+    FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser() ;
+    ArrayList<String> aImages , aProduct ;
+    boolean favorite = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +101,35 @@ public class product_page extends AppCompatActivity {
         aRight_Left = AnimationUtils.loadAnimation(this,R.anim.right_left);
         iBack.startAnimation(aRight_Left);
 
+
+        //intent
+        intent = getIntent();
+        fetchData();
+
+        firebaseFirestore.collection("Product").whereEqualTo("Id",sId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (DocumentSnapshot documentSnapshot : task.getResult()){
+                        if (documentSnapshot.get("Favorite" + sId) != null){
+                            favorite = (boolean) documentSnapshot.get("Favorite" + sId);
+                            if (favorite){
+
+                                favorite = false ;
+                                iFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+
+                            }else{
+
+                                favorite = true ;
+                                iFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         //onClicks
         iBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,10 +165,13 @@ public class product_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(product_page.this,Checkout_first_step.class);
+                aProduct = new ArrayList<>();
+                aProduct.add(sId);
                 intent.putExtra("Price",sProductPrice);
                 intent.putExtra("Id",sId);
                 intent.putExtra("Image",aImages.get(0));
                 intent.putExtra("Title",sProductTitle);
+                intent.putStringArrayListExtra("Data",aProduct);
                 startActivity(intent);
             }
         });
@@ -156,16 +187,23 @@ public class product_page extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         iFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 iFavorite.setAlpha(0.2f);
-                firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                firebaseFirestore.collection("Product").whereEqualTo("Id",sId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                    if (task.isSuccessful()){
                        for (DocumentSnapshot documentSnapshot : task.getResult()){
-                          update(documentSnapshot,"Favorite" + firebaseAuth.getUid(),true);
+                           update(documentSnapshot, "Favorite" + firebaseAuth.getUid(), favorite);
+                           if (favorite) {
+                               favorite = false ;
+                           }else{
+                               favorite = true ;
+                           }
                        }
                    }else{}
 
@@ -174,9 +212,6 @@ public class product_page extends AppCompatActivity {
             }
         });
 
-        //intent
-        intent = getIntent() ;
-        fetchData();
 
         //Reviews Work
         layoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -248,15 +283,17 @@ public class product_page extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
            if (task.isSuccessful()){
                iFavorite.setAlpha(1f);
-               Toast.makeText(product_page.this, "Product Added To WishList", Toast.LENGTH_SHORT).show();
                if(value){
                   iFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                   Toast.makeText(product_page.this, "Product Added To WishList", Toast.LENGTH_SHORT).show();
               }else{
                   iFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                   Toast.makeText(product_page.this, "Product deleted from WishList", Toast.LENGTH_SHORT).show();
               }
-           }else{
            }
-            }
+           else
+               {
+           }}
         });
     }
 

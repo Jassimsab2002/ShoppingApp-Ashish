@@ -38,6 +38,7 @@ import com.shop.shoppingapp.viewholders.CatagoriesHolder;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StorePage extends Fragment {
 
@@ -51,6 +52,7 @@ public class StorePage extends Fragment {
     ChipGroup chipGroup ;
     Chip chip ;
     Animation aDownUp , aLeftRight , aRightLeft ;
+
     public StorePage() {}
 
     @Override
@@ -87,7 +89,6 @@ public class StorePage extends Fragment {
                 chip = view.findViewById(chipGroup.getCheckedChipId());
                 String s = chip.getText().toString().trim();
                 updateGrid(s);
-
             }
         });
 
@@ -117,19 +118,22 @@ public class StorePage extends Fragment {
                     if (task.isSuccessful()){
                         for (DocumentSnapshot documentSnapshot : task.getResult()){
                             arrayList.add(new Product(
+
                                     documentSnapshot.get("Title").toString()
                                     ,documentSnapshot.get("Price").toString()
-                                    ,documentSnapshot.get("Store").toString()
+                                    ,documentSnapshot.get("StoreName").toString()
                                     ,documentSnapshot.get("Description").toString()
-                                    ,documentSnapshot.get("ImageUrl").toString()
+                                    , Objects.requireNonNull(documentSnapshot.get("ImageUrl")).toString()
                                     ,documentSnapshot.get("Details").toString()
                                     ,documentSnapshot.getId()
+
                             ));
                         }
                         grid.setAdapter(customAdapter);
                         customAdapter.setOnClickListener(new CustomAdapter.ClickListener() {
                             @Override
                             public void onClickListener(View v , int position) {
+
                                 Intent intent = new Intent(getActivity(), product_page.class);
                                 intent.putExtra("Title",arrayList.get(position).getTitle());
                                 intent.putExtra("StoreName",arrayList.get(position).getStoreName());
@@ -139,6 +143,7 @@ public class StorePage extends Fragment {
                                 intent.putExtra("Details",arrayList.get(position).getDetails());
                                 intent.putExtra("Id",arrayList.get(position).getId());
                                 startActivity(intent);
+
                             }
                         });
                     }else{}
@@ -153,11 +158,10 @@ public class StorePage extends Fragment {
 
                 if (task.isSuccessful()){
                     for (DocumentSnapshot documentSnapshot : task.getResult()){
-
                         arrayList.add(new Product(
                                 documentSnapshot.get("Title").toString()
                                 ,documentSnapshot.get("Price").toString()
-                                ,documentSnapshot.get("Store").toString()
+                                ,documentSnapshot.get("StoreName").toString()
                                 ,documentSnapshot.get("Description").toString()
                                 ,documentSnapshot.get("ImageUrl").toString()
                                 ,documentSnapshot.get("Details").toString()

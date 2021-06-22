@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,12 +21,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.shop.shoppingapp.R;
+import com.shop.shoppingapp.buy.Checkout_first_step;
 import com.shop.shoppingapp.buy.product_page;
 import com.shop.shoppingapp.module.Product;
 import com.shop.shoppingapp.viewholders.ProductHolder;
+
+import java.util.ArrayList;
 
 public class ActivityCart extends AppCompatActivity {
 
@@ -37,6 +43,9 @@ public class ActivityCart extends AppCompatActivity {
     FirestoreRecyclerAdapter<Product, ProductHolder> adapter ;
     AppCompatCheckBox checkBox ;
     int iCheckPrice = 0 ;
+    ArrayList<String> arrayList = new ArrayList<>() ;
+    Button bBuy ;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
     @Override
@@ -46,14 +55,16 @@ public class ActivityCart extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerview);
         tCheckedPrice = findViewById(R.id.textview_price);
+        bBuy = findViewById(R.id.BuyNow);
 
         //Recycler
         layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        suggestionQuery = firestore.collection("Product").whereEqualTo("Cart",true);
+        suggestionQuery = firestore.collection("Product").whereEqualTo("Cart" + firebaseAuth.getUid() ,true);
         FirestoreRecyclerOptions<Product> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(suggestionQuery,Product.class)
                 .build();
+
 
         adapter = new FirestoreRecyclerAdapter<Product, ProductHolder>(firestoreRecyclerOptions) {
             @Override
@@ -75,8 +86,10 @@ public class ActivityCart extends AppCompatActivity {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked){
                             tCheckedPrice.setText(setPrice(0,Integer.parseInt(model.getPrice())));
+                            arrayList.add(model.getId());
                         }else{
                             tCheckedPrice.setText(setPrice(5,Integer.parseInt(model.getPrice())));
+                            arrayList.remove(arrayList.size());
                         }
                     }
                 });
@@ -108,14 +121,28 @@ public class ActivityCart extends AppCompatActivity {
             }
         };
         recyclerView.setAdapter(adapter);
+
+
+        //setOnClicks
+        bBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityCart.this, Checkout_first_step.class);
+                intent.putStringArrayListExtra("Data",arrayList);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public String setPrice(int type , int price){
+
         if (type == 0){
             iCheckPrice += price ;
         }else{
             iCheckPrice -= price ;
         }
+
         return String.valueOf(iCheckPrice) + "$";
     }
     @Override

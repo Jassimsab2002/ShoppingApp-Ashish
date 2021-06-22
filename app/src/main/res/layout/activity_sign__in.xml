@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".authentification.Sign_In">
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:elevation="5dp"
+        android:padding="100dp"
+        android:id="@+id/progress_bar"
+        android:visibility="invisible"
+        />
 
     <ImageView
         android:id="@+id/imageView"

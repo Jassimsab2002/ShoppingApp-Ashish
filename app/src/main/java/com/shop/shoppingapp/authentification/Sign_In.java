@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
 
 public class Sign_In extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class Sign_In extends AppCompatActivity {
     EditText ePassword , eEmail ;
     String email , password ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance() ;
+    ProgressBar progressBar ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +35,14 @@ public class Sign_In extends AppCompatActivity {
         Sign_in = findViewById(R.id.SignIn);
         ePassword = findViewById(R.id.password);
         eEmail = findViewById(R.id.email);
+        progressBar = findViewById(R.id.progress_bar);
 
 
         Sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                progressBar.setVisibility(View.VISIBLE);
                 email = eEmail.getText().toString().trim();
                 password = ePassword.getText().toString().trim();
 
@@ -44,10 +50,13 @@ public class Sign_In extends AppCompatActivity {
                     firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressBar.setVisibility(View.INVISIBLE);
                        if (task.isSuccessful()){
-                           Intent intent = new Intent(Sign_In.this , Sign_up.class);
+                           Intent intent = new Intent(Sign_In.this , MainActivity.class);
                            startActivity(intent);
                            finish();
+                       }else{
+                           Toast.makeText(Sign_In.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                        }
                         }
                     });

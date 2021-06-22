@@ -57,7 +57,7 @@ public class Search_Result extends AppCompatActivity {
         //GridView
         arrayList =  new ArrayList<>();
         adapter = new CustomAdapter(arrayList,this,getLayoutInflater());
-        firestore.collection("Product").whereArrayContains("Title",iSearch.getStringExtra("Title")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("Product").whereEqualTo("Title",iSearch.getStringExtra("Title")).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -66,7 +66,7 @@ public class Search_Result extends AppCompatActivity {
                             arrayList.add(new Product(
                                     documentSnapshot.get("Title").toString()
                                     , documentSnapshot.get("Price").toString()
-                                    , documentSnapshot.get("Store").toString()
+                                    , documentSnapshot.get("StoreName").toString()
                                     , documentSnapshot.get("Description").toString()
                                     , documentSnapshot.get("ImageUrl").toString()
                                     , documentSnapshot.get("Details").toString()

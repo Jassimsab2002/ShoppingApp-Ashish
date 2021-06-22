@@ -54,7 +54,7 @@ public class Order_Received extends AppCompatActivity {
                 sComment = eComment.getText().toString().trim();
                 sRating = eRating.getText().toString().trim();
                 if ( ! sRating.isEmpty() && ! sComment.isEmpty()){
-                    if (Integer.valueOf(sRating) < 5){
+                    if (Integer.valueOf(sRating) <= 5){
                         firestore.collection("Product").whereEqualTo("Title",sTitle).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -83,7 +83,8 @@ public class Order_Received extends AppCompatActivity {
                             }
                         });
                     }else{
-                        Toast.makeText(Order_Received.this, "Please rate out of 1", Toast.LENGTH_SHORT).show();
+                        fSave.setAlpha(1f);
+                        Toast.makeText(Order_Received.this, "Please rate out of 5", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{

@@ -37,6 +37,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.shop.shoppingapp.Cart.ActivityCart;
+import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
 import com.shop.shoppingapp.authentification.Sign_In;
 import com.shop.shoppingapp.buy.ProductImagesAdapter;
@@ -181,7 +182,7 @@ public class HomePage extends Fragment {
         womanLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         womanRecyclerView.setLayoutManager(womanLayoutManager);
 
-        shoesQuery = firestore.collection("Product");
+        shoesQuery = firestore.collection("Product").whereEqualTo("Category","Automobiles");
         menQuery = firestore.collection("Product").whereEqualTo("Sex","Men");
         womanQuery = firestore.collection("Product").whereEqualTo("Sex","Woman");
         watchesQuery = firestore.collection("Product").whereEqualTo("Category","Watches");
@@ -206,6 +207,11 @@ public class HomePage extends Fragment {
                         startActivity(nIntent);
                         break;
 
+                    case R.id.AllCategories :
+                        Intent intent2 = new Intent(getActivity(), MainActivity.class);
+                        intent2.putExtra("Type","Store");
+                        startActivity(intent2);
+                        break;
 
                 }
                 return true;
@@ -458,13 +464,13 @@ public class HomePage extends Fragment {
         tSeeWatches.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAct("Watches");
+                startAct("Glasses");
             }
         });
         tSeeShoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAct("Shoes");
+                startAct("Automobiles");
             }
         });
 

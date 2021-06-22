@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
+import com.shop.shoppingapp.module.Orders;
 import com.shop.shoppingapp.profile.MyOrders_Change;
 import com.stripe.android.ApiResultCallback;
 import com.stripe.android.PaymentConfiguration;
@@ -41,6 +44,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,10 +69,12 @@ public class Checkout_last_step extends AppCompatActivity {
     private Stripe stripe ;
     static ProgressBar progressBar ;
     FrameLayout fPay ;
-    static String sAddress , sTotalPrice , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId ;
+    static String sAddress , sTotalPrice , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId , sCountry;
     Intent intent ;
     static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<Orders> arrayListOrders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,19 +90,19 @@ public class Checkout_last_step extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         cardInputWidget = findViewById(R.id.card);
 
+        progressBar.setVisibility(View.VISIBLE);
+
         //Intent
         intent = getIntent();
+        getData(Objects.requireNonNull(intent.getStringArrayListExtra("Data")));
+        sCountry = intent.getStringExtra("Country");
         sAddress = intent.getStringExtra("Address");
+          /*
         sProductPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
         sTitle = intent.getStringExtra("Title");
         sImage = intent.getStringExtra("Image");
-
-
-        //setInfo
-        tAddress.setText(sAddress);
-        tPPrice.setText(sProductPrice);
-
+         */
 
         //User Info
         sUserId = firebaseAuth.getUid();
@@ -124,11 +130,59 @@ public class Checkout_last_step extends AppCompatActivity {
         });
     }
 
+    private void getData(ArrayList<String> arrayList) {
+        for (String id : arrayList){
+            firestore.collection("Product").whereEqualTo("Id",id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+                            sProductPrice = documentSnapshot.get("Price").toString();
+                            sImage = documentSnapshot.get("ImageUrl").toString();
+                            sTitle = documentSnapshot.get("Title").toString();
+                            sId = documentSnapshot.get("Id").toString();
+                            getShipping(documentSnapshot.getReference());
+
+                            tAddress.setText(sAddress);
+                            tPPrice.setText(sProductPrice + "$");
+
+                            arrayListOrders.add(new Orders(sImage,sUserId,sTitle,null,sProductPrice,generateId(),documentSnapshot.get("Id").toString()));
+                        }
+                    }else{
+                        Toast.makeText(Checkout_last_step.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void getShipping(DocumentReference reference) {
+        reference.collection("Country").whereEqualTo("Country",sCountry).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+
+                    for (DocumentSnapshot documentSnapshot : task.getResult()){
+                        sShippingPrice = documentSnapshot.get("Shipping").toString();
+                        Toast.makeText(Checkout_last_step.this, "suc " + sShippingPrice, Toast.LENGTH_SHORT).show();
+
+                        tPShipping.setText(sShippingPrice + "$");
+                        String pTotal = String.valueOf( Integer.valueOf(sProductPrice) + Integer.valueOf(sShippingPrice));
+                        tPTotal.setText(pTotal);
+                    }
+                }else{
+                    Toast.makeText(Checkout_last_step.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void startCheckout() {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         String json = "{}";
 
 /*
+
         double amount = 05.25 ;
         Map<String,Object> payMap = new HashMap<>();
         Map<String,Object> itemMap = new HashMap<>();
@@ -139,6 +193,7 @@ public class Checkout_last_step extends AppCompatActivity {
         itemList.add(itemMap);
         payMap.put("items",itemList);
         String json = new Gson().toJson(payMap);
+
  */
 
         RequestBody body = RequestBody.create(json, mediaType);
@@ -156,6 +211,8 @@ public class Checkout_last_step extends AppCompatActivity {
                 */
         httpClient.newCall(request)
                 .enqueue(new Checkout_last_step.PayCallBack(Checkout_last_step.this));
+        progressBar.setVisibility(View.INVISIBLE);
+
 
     }
     @Override
@@ -184,10 +241,35 @@ public class Checkout_last_step extends AppCompatActivity {
             PaymentIntent.Status status = paymentIntent.getStatus();
 
             if (status == PaymentIntent.Status.Succeeded){
+            /*
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 Date dNow = new Date();
                 SimpleDateFormat ft = new SimpleDateFormat("yyMMddhhmmssMs");
                 String datetime = ft.format(dNow);
+             */
+                for (Orders model : arrayListOrders){
+                    HashMap<String,Object> hashMap = new HashMap<>();
+                    hashMap.put("Address",sAddress);
+                    hashMap.put("Shipping",sShippingPrice);
+                    hashMap.put("Image",model.getImage());
+                    hashMap.put("ProductId",model.getOrderId());
+                    hashMap.put("BuyerId",sUserId);
+                    hashMap.put("Title",model.getTitle());
+                    hashMap.put("Price",model.getPrice());
+                    hashMap.put("OrderId",model.getOrderId());
+                    firestore.collection("Orders").document().set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Intent intent = new Intent(Checkout_last_step.this, MyOrders_Change.class);
+                                startActivity(intent);
+                                finish();
+                            }else{}
+                        }
+                    });
+                }
+
+             /*
                 HashMap<String,Object> hashMap = new HashMap<>();
                        hashMap.put("Address",sAddress);
                        hashMap.put("Shipping",sShippingPrice);
@@ -197,6 +279,7 @@ public class Checkout_last_step extends AppCompatActivity {
                        hashMap.put("Title",sTitle);
                        hashMap.put("Price",sProductPrice);
                        hashMap.put("OrderId",datetime);
+
                      firestore.collection("Orders").document().set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                            @Override
                            public void onComplete(@NonNull Task<Void> task) {
@@ -207,12 +290,14 @@ public class Checkout_last_step extends AppCompatActivity {
                                }else{}
                            }
                        });
+
+              */
+
+
                    }
                     }
 
             }
-
-
 
     private static final class PayCallBack implements Callback {
 
@@ -252,12 +337,12 @@ public class Checkout_last_step extends AppCompatActivity {
                         Toast.makeText(activity, "Error response not successful: " + response.message() , Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }else{
                 activity.onPaymentSuccess(response);
             }
         }
     }
-
 
     private void onPaymentSuccess(Response response) {
         Gson gson = new Gson();
@@ -273,5 +358,12 @@ public class Checkout_last_step extends AppCompatActivity {
         }
         paymentIntentClientSecret = responseMap.get("clientSecret");
 
+    }
+
+    private String generateId (){
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("yyMMddhhmmssMs");
+        String datetime = ft.format(dNow);
+        return datetime ;
     }
 }

@@ -71,6 +71,7 @@
             android:textColor="#fff"
             android:fontFamily="@font/bold"
             android:background="#fff"
+            android:id="@+id/BuyNow"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

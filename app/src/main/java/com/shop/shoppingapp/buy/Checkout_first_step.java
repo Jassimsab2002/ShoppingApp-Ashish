@@ -62,6 +62,7 @@ public class Checkout_first_step extends AppCompatActivity {
     EditText eName , eNumber ,  eAddress , eZipCode ;
     String sName , sNumber ,  sAddress , sZipCode , sSCountry , sPrice , sId , sImage , sTitle ;
     Intent intent ;
+    ArrayList<String> arrayList ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +81,16 @@ public class Checkout_first_step extends AppCompatActivity {
 
         //Intent
         intent = getIntent();
+        arrayList = intent.getStringArrayListExtra("Data");
+
+
+
+     /*
         sPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
         sImage = intent.getStringExtra("Image");
         sTitle = intent.getStringExtra("Title");
+      */
 
         //Progress
         progressBar.setVisibility(View.INVISIBLE);
@@ -116,14 +123,21 @@ public class Checkout_first_step extends AppCompatActivity {
 
                 if(! sNumber.isEmpty() && ! sName.isEmpty() && ! sAddress.isEmpty() && ! sZipCode.isEmpty() && ! sSCountry.isEmpty()){
                    Intent intent = new Intent(Checkout_first_step.this ,Checkout_last_step.class);
+                   intent.putExtra("Country",sSCountry);
                    intent.putExtra("Address",sAddress);
+                   /*
                    intent.putExtra("Price",sPrice);
                    intent.putExtra("Id",sId);
                    intent.putExtra("Image",sImage);
                    intent.putExtra("Title",sTitle);
+                  */
+
+                   intent.putStringArrayListExtra("Data",arrayList);
                     startActivity(intent);
                     finish();
+
                 }else{
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(Checkout_first_step.this, "One of the fields is empty.", Toast.LENGTH_LONG).show();
                 }
             }
