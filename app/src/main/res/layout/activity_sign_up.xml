@@ -58,7 +58,8 @@
         android:textSize="15dp"
         app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/text"
-        tools:layout_editor_absoluteX="20dp" />
+        tools:layout_editor_absoluteX="20dp"
+        />
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
@@ -131,7 +132,7 @@
         app:layout_constraintBottom_toTopOf="@+id/SignIn"
         app:layout_constraintTop_toBottomOf="@+id/confirm_password"
         tools:layout_editor_absoluteX="20dp"
-        android:inputType="textPassword"/>
+        android:inputType="textPostalAddress"/>
 
     <TextView
         android:id="@+id/welcome"

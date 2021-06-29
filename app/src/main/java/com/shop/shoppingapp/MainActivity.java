@@ -3,6 +3,7 @@ package com.shop.shoppingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -16,7 +17,7 @@ import com.shop.shoppingapp.home.HomePage;
 import com.shop.shoppingapp.profile.Profile_Fragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentInterface {
 
     FragmentTransaction transaction ;
     HomePage homePage ;
@@ -89,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
 
         }
+
+    }
+
+    @Override
+    public void openFragment(Fragment fragment) {
 
     }
 

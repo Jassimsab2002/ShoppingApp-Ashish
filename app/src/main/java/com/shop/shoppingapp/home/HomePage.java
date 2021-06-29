@@ -46,6 +46,7 @@ import com.shop.shoppingapp.lists.Favorite;
 import com.shop.shoppingapp.lists.Notification_List;
 import com.shop.shoppingapp.module.Product;
 import com.shop.shoppingapp.profile.Settings_Profile;
+import com.shop.shoppingapp.search.Srearch_Activity;
 import com.shop.shoppingapp.viewholders.ProductHolder;
 public class HomePage extends Fragment {
 
@@ -447,6 +448,13 @@ public class HomePage extends Fragment {
 
     private void setOnClicks() {
 
+        eSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Srearch_Activity.class);
+                startActivity(intent);
+            }
+        });
         fMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

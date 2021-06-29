@@ -50,7 +50,7 @@
         android:layout_marginHorizontal="20dp"
         android:fontFamily="@font/bold"
         android:gravity="center"
-        android:text="If you want to change your password click this link and we will send you an email qich you can use to chage it."
+        android:text="If you want to change your password click this link and we will send you an email wich you can use to chage it."
         android:textColor="#2C000000"
         android:textSize="17dp"
         android:layout_marginTop="10dp"

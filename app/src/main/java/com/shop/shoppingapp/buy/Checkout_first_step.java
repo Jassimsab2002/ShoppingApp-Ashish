@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -63,6 +64,7 @@ public class Checkout_first_step extends AppCompatActivity {
     String sName , sNumber ,  sAddress , sZipCode , sSCountry , sPrice , sId , sImage , sTitle ;
     Intent intent ;
     ArrayList<String> arrayList ;
+    SharedPreferences sharedPreferences ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +85,12 @@ public class Checkout_first_step extends AppCompatActivity {
         intent = getIntent();
         arrayList = intent.getStringArrayListExtra("Data");
 
-
+        //getData
+        sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
+        sName = sharedPreferences.getString("name","Please add the name of the receiver");
+        sAddress = sharedPreferences.getString("address","Please add the Address of the receiver");
+        eAddress.setText(sAddress);
+        eName.setText(sName);
 
      /*
         sPrice = intent.getStringExtra("Price");

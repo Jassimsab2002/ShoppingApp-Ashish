@@ -130,9 +130,6 @@
         android:paddingVertical="12dp"
         />
 
-
-
-
     <FrameLayout
         android:id="@+id/save"
         android:layout_width="match_parent"

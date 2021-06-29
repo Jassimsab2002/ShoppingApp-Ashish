@@ -1,12 +1,14 @@
 package com.shop.shoppingapp.buy;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -38,13 +41,14 @@ import com.shop.shoppingapp.module.Reviews;
 import com.shop.shoppingapp.viewholders.ProductHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class product_page extends AppCompatActivity {
 
     Intent intent ;
     TextView tStoreName , tProductTitle , tProductPrice , tProductDetails ,tAddToCart , tReviewTitle , tReviewDescription , tProductDiscount ;
     String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductDetails , sId ;
-    ImageView iSend , iFavorite , iBack , iLeft , iRight ;
+    ImageView iSend , iFavorite , iBack , iLeft , iRight  ;
     CardView cAddToCart , cBuyNow ;
     String sProductShare = "" ;
     ViewPager vProductImages ;
@@ -59,7 +63,7 @@ public class product_page extends AppCompatActivity {
     Animation aDown_Up , aLeft_Right , aRight_Left ;
     FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser() ;
     ArrayList<String> aImages , aProduct ;
-    boolean favorite = true;
+    boolean favorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,16 +115,11 @@ public class product_page extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (DocumentSnapshot documentSnapshot : task.getResult()){
-                        if (documentSnapshot.get("Favorite" + sId) != null){
-                            favorite = (boolean) documentSnapshot.get("Favorite" + sId);
+                        if (documentSnapshot.get("Favorite" + firebaseAuth.getUid()) != null){
+                            favorite = (boolean) documentSnapshot.get("Favorite" + firebaseAuth.getUid());
                             if (favorite){
-
-                                favorite = false ;
                                 iFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
-
                             }else{
-
-                                favorite = true ;
                                 iFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
 
                             }
@@ -142,6 +141,8 @@ public class product_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cAddToCart.setAlpha(0.5f);
+                showDialogow(0);
+              /*
                 firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -158,12 +159,16 @@ public class product_page extends AppCompatActivity {
                    }else{}
                     }
                 });
+
+               */
             }
         });
 
         cBuyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               showDialogow(45);
+             /*
                 Intent intent = new Intent(product_page.this,Checkout_first_step.class);
                 aProduct = new ArrayList<>();
                 aProduct.add(sId);
@@ -173,6 +178,7 @@ public class product_page extends AppCompatActivity {
                 intent.putExtra("Title",sProductTitle);
                 intent.putStringArrayListExtra("Data",aProduct);
                 startActivity(intent);
+              */
             }
         });
 
@@ -198,11 +204,14 @@ public class product_page extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                    if (task.isSuccessful()){
                        for (DocumentSnapshot documentSnapshot : task.getResult()){
-                           update(documentSnapshot, "Favorite" + firebaseAuth.getUid(), favorite);
-                           if (favorite) {
-                               favorite = false ;
-                           }else{
+                           if (!favorite) {
                                favorite = true ;
+                               iFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                               update(documentSnapshot, "Favorite" + firebaseAuth.getUid(),  favorite);
+                           }else{
+                               favorite = false ;
+                               iFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                               update(documentSnapshot, "Favorite" + firebaseAuth.getUid(),  favorite);
                            }
                        }
                    }else{}
@@ -316,6 +325,59 @@ public class product_page extends AppCompatActivity {
 
     }
 
+    public void showDialogow(final int x){
+        // create an alert builder
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Name");
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.alertdialog, null);
+        builder.setView(customLayout);
+        // add a button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // send data from the AlertDialog to the Activity
+                final EditText editText = customLayout.findViewById(R.id.editText);
+                if (x == 0){
+                    firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (DocumentSnapshot documentSnapshot : task.getResult()){
+                                    HashMap<String , Object> hashMap = new HashMap<>();
+                                    hashMap.put("Cart" + firebaseAuth.getUid() , true);
+                                    hashMap.put("CartQuantity" + firebaseAuth.getUid() , editText.getText().toString());
+                                    documentSnapshot.getReference().update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            cAddToCart.setAlpha(1f);
+                                            Toast.makeText(product_page.this, "Product Added To cart", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }else{}
+                        }
+                    });
+                }else{
+
+                    Intent intent = new Intent(product_page.this,Checkout_first_step.class);
+                    aProduct = new ArrayList<>();
+                    aProduct.add(sId);
+                    intent.putExtra("Price",sProductPrice);
+                    intent.putExtra("Id",sId);
+                    intent.putExtra("Image",aImages.get(0));
+                    intent.putExtra("Title",sProductTitle);
+                    intent.putStringArrayListExtra("Data",aProduct);
+                    startActivity(intent);
+
+                }
+
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     @Override
     protected void onStart() {
         super.onStart();

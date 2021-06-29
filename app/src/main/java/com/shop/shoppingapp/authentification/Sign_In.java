@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
 
@@ -56,7 +61,20 @@ public class Sign_In extends AppCompatActivity {
                            startActivity(intent);
                            finish();
                        }else{
-                           Toast.makeText(Sign_In.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                           try {
+                               throw task.getException();
+                           } catch(FirebaseAuthWeakPasswordException e) {
+                               ePassword.setError(task.getException().getMessage());
+                               ePassword.requestFocus();
+                           } catch(FirebaseAuthInvalidCredentialsException e) {
+                               eEmail.setError(task.getException().getMessage());
+                               eEmail.requestFocus();
+                           } catch(FirebaseAuthUserCollisionException e) {
+                               eEmail.setError(task.getException().getMessage());
+                               eEmail.requestFocus();
+                           } catch(Exception e) {
+                               Toast.makeText(Sign_In.this, "" + task.getException() , Toast.LENGTH_SHORT).show();
+                           }
                        }
                         }
                     });

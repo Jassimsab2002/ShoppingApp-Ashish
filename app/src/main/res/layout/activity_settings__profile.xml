@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profile.Settings_Profile">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <ImageView
         android:id="@+id/back"
@@ -30,17 +35,37 @@
         android:layout_marginLeft="10dp"
         />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/image_cadre"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cardCornerRadius="40dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/profile_image"
+            android:id="@+id/profile_image"
+            />
+    </androidx.cardview.widget.CardView>
+
     <EditText
         android:id="@+id/edittext_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/image_cadre"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:hint="New Name"
         android:fontFamily="@font/bold"
         android:textColorHint="#25000000"
         android:textColor="#80000000"
+
         />
 
     <EditText
@@ -69,3 +94,5 @@
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
