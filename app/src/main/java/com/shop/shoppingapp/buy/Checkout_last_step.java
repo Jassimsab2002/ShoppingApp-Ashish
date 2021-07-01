@@ -211,7 +211,7 @@ public class Checkout_last_step extends AppCompatActivity {
                 */
         httpClient.newCall(request)
                 .enqueue(new Checkout_last_step.PayCallBack(Checkout_last_step.this));
-        progressBar.setVisibility(View.INVISIBLE);
+
 
 
     }
@@ -337,8 +337,8 @@ public class Checkout_last_step extends AppCompatActivity {
                         Toast.makeText(activity, "Error response not successful: " + response.message() , Toast.LENGTH_SHORT).show();
                     }
                 });
-
             }else{
+                progressBar.setVisibility(View.INVISIBLE);
                 activity.onPaymentSuccess(response);
             }
         }

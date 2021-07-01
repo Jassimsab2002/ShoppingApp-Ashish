@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -64,6 +65,7 @@ public class product_page extends AppCompatActivity {
     FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser() ;
     ArrayList<String> aImages , aProduct ;
     boolean favorite = false;
+    int iQuantity ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,12 +334,35 @@ public class product_page extends AppCompatActivity {
         // set the custom layout
         final View customLayout = getLayoutInflater().inflate(R.layout.alertdialog, null);
         builder.setView(customLayout);
+        final TextView tProductQuality = customLayout.findViewById(R.id.product_quality);
+        final ImageView iPQAdd = customLayout.findViewById(R.id.product_quantity_add);
+        final ImageView iPQMinim = customLayout.findViewById(R.id.product_quality_minim);
+        iQuantity = Integer.valueOf((String) tProductQuality.getText());
+        iPQAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               iQuantity++ ;
+               tProductQuality.setText(String.valueOf(iQuantity));
+            }
+        });
+
+        iPQMinim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if (iQuantity > 1) {
+                iQuantity--;
+                tProductQuality.setText(String.valueOf(iQuantity));
+            }else{
+                Toast.makeText(product_page.this, "You can't go above that", Toast.LENGTH_SHORT).show();
+            }
+            }
+        });
+
         // add a button
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // send data from the AlertDialog to the Activity
-                final EditText editText = customLayout.findViewById(R.id.editText);
                 if (x == 0){
                     firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -346,7 +371,7 @@ public class product_page extends AppCompatActivity {
                                 for (DocumentSnapshot documentSnapshot : task.getResult()){
                                     HashMap<String , Object> hashMap = new HashMap<>();
                                     hashMap.put("Cart" + firebaseAuth.getUid() , true);
-                                    hashMap.put("CartQuantity" + firebaseAuth.getUid() , editText.getText().toString());
+                                    hashMap.put("CartQuantity" + firebaseAuth.getUid() , tProductQuality.getText().toString());
                                     documentSnapshot.getReference().update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -355,6 +380,7 @@ public class product_page extends AppCompatActivity {
                                         }
                                     });
                                 }
+
                             }else{}
                         }
                     });
