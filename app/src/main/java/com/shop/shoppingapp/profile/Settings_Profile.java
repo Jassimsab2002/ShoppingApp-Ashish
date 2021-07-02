@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,9 +80,10 @@ public class Settings_Profile extends AppCompatActivity {
         homePage = new HomePage();
 
         //setData
+
         eName.setText(sName);
         eAdress.setText(sAddress);
-        firestore.collection("Users").document(firebaseAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
@@ -111,9 +114,6 @@ public class Settings_Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               if (filePath != null) {
-                   uploadImage(filePath);
-               }
                 bSubmit.setAlpha(0.2f);
                 sName = eName.getText().toString();
                 editor.remove("name");
@@ -124,17 +124,22 @@ public class Settings_Profile extends AppCompatActivity {
                 HashMap<String,Object> hashMap = new HashMap<>();
                 hashMap.put("Name",sName);
                 hashMap.put("Address",sAddress);
-                firestore.collection("Users").document(firebaseAuth.getUid()).update(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).update(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            bSubmit.setAlpha(1);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startAct(1);
+                                    bSubmit.setAlpha(1);
+                                    if (filePath != null) {
+                                        uploadImage(filePath);
+                                        Toast.makeText(Settings_Profile.this, "Okay", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             },6000);
+                        }else{
+                            bSubmit.setAlpha(1);
                         }
                     }
                 });
@@ -189,17 +194,18 @@ public class Settings_Profile extends AppCompatActivity {
                 = storageReference.getReference().child(
                         "images/*"
                                 + UUID.randomUUID().toString());
-
-        ref.putFile(filePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).update("ProfileImage" , ref.getDownloadUrl());
+        ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(mainActivity, "Image uploaded", Toast.LENGTH_SHORT).show();
-                    firestore.collection("Users").document(firebaseAuth.getUid()).update("ProfileImage" , ref.getDownloadUrl());
-                }else{
-                    Toast.makeText(mainActivity,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(Settings_Profile.this, "Image uploaded", Toast.LENGTH_SHORT).show();
 
-                }
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Settings_Profile.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

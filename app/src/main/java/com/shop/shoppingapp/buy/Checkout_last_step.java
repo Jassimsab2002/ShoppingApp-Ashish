@@ -234,9 +234,11 @@ public class Checkout_last_step extends AppCompatActivity {
         @Override
         public void onSuccess(PaymentIntentResult paymentIntentResult) {
             final Checkout_last_step activity = activityRef.get();
+
             if (activity == null){
                 return;
             }
+
             PaymentIntent paymentIntent = paymentIntentResult.getIntent();
             PaymentIntent.Status status = paymentIntent.getStatus();
 
