@@ -367,8 +367,11 @@ public class product_page extends AppCompatActivity {
                     firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                             if (task.isSuccessful()){
+
                                 for (DocumentSnapshot documentSnapshot : task.getResult()){
+
                                     HashMap<String , Object> hashMap = new HashMap<>();
                                     hashMap.put("Cart" + firebaseAuth.getUid() , true);
                                     hashMap.put("CartQuantity" + firebaseAuth.getUid() , tProductQuality.getText().toString());
@@ -377,6 +380,7 @@ public class product_page extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             cAddToCart.setAlpha(1f);
                                             Toast.makeText(product_page.this, "Product Added To cart", Toast.LENGTH_SHORT).show();
+
                                         }
                                     });
                                 }
@@ -384,6 +388,7 @@ public class product_page extends AppCompatActivity {
                             }else{}
                         }
                     });
+
                 }else{
 
                     Intent intent = new Intent(product_page.this,Checkout_first_step.class);
@@ -400,9 +405,11 @@ public class product_page extends AppCompatActivity {
 
             }
         });
+
         // create and show the alert dialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
     }
     @Override
     protected void onStart() {

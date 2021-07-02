@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,10 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +30,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.shop.shoppingapp.FragmentInterface;
@@ -41,14 +47,14 @@ import java.util.UUID;
 
 public class Settings_Profile extends AppCompatActivity {
 
-    EditText eName , eEmail , eAdress ;
+    EditText eName , eAdress ;
     Button bSubmit ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance() ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance() ;
     SharedPreferences sharedPreferences ;
     SharedPreferences.Editor editor ;
     ImageView iBack ;
-    String sName , sEmail , sAddress ;
+    String sName , sImage , sAddress ;
     FragmentInterface fragmentInterface ;
     HomePage homePage ;
     MainActivity mainActivity ;
@@ -56,6 +62,8 @@ public class Settings_Profile extends AppCompatActivity {
     final int REQUEST_OPTION = 22 ;
     Uri filePath ;
     FirebaseStorage storageReference = FirebaseStorage.getInstance();
+    FrameLayout fThanks ;
+    TextView tThanks ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,13 @@ public class Settings_Profile extends AppCompatActivity {
         editor = sharedPreferences.edit();
         sName = sharedPreferences.getString("name","You need to resign in we lost the data.");
         sAddress = sharedPreferences.getString("address","You need to resign in we lost the data");
+        sImage = sharedPreferences.getString("image",null);
+
+        if (sImage != null){
+            Uri uri = Uri.parse(sImage);
+            Glide.with(getApplicationContext()).load(uri).into(iProfile);
+        }
+
 
         //Fragment
         mainActivity = new MainActivity();
@@ -83,6 +98,7 @@ public class Settings_Profile extends AppCompatActivity {
 
         eName.setText(sName);
         eAdress.setText(sAddress);
+        /*
         firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -94,6 +110,8 @@ public class Settings_Profile extends AppCompatActivity {
                     }
             }
         });
+
+         */
 
         //setOnClicks
         iBack.setOnClickListener(new View.OnClickListener() {
@@ -120,29 +138,49 @@ public class Settings_Profile extends AppCompatActivity {
                 editor.putString("name" , sName);
                 editor.remove("Address");
                 editor.putString("Address",sAddress);
-                editor.apply();
-                HashMap<String,Object> hashMap = new HashMap<>();
+
+
+                final HashMap<String,Object> hashMap = new HashMap<>();
                 hashMap.put("Name",sName);
                 hashMap.put("Address",sAddress);
+
+                if (filePath != null){
+                    editor.remove("image");
+                    editor.putString("image" , filePath.toString());
+                }
+
+                editor.apply();
+
+                 new Handler().postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                         bSubmit.setAlpha(1f);
+                     }
+                 },4000);
+              /*
                 firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).update(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
+                            Log.i("PHOTOWORKING", "onComplete: ");
+                            if (filePath != null) {
+                                Toast.makeText(Settings_Profile.this, "Okay", Toast.LENGTH_SHORT).show();
+                                // uploadImage(filePath);
+                            }
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     bSubmit.setAlpha(1);
-                                    if (filePath != null) {
-                                        uploadImage(filePath);
-                                        Toast.makeText(Settings_Profile.this, "Okay", Toast.LENGTH_SHORT).show();
-                                    }
                                 }
                             },6000);
                         }else{
                             bSubmit.setAlpha(1);
+                            Log.i("PHOTOERROR", "onComplete: " + task.getException().getMessage());
                         }
                     }
                 });
+
+               */
 
             }
         });
@@ -167,6 +205,7 @@ public class Settings_Profile extends AppCompatActivity {
                 && data.getData() != null) {
 
             filePath = data.getData();
+            Log.i("PHOTO/", "onActivityResult: " + filePath);
             try {
 
                 // Setting image on image view using Bitmap
@@ -177,7 +216,7 @@ public class Settings_Profile extends AppCompatActivity {
                                 getContentResolver(),
                                 filePath);
                 iProfile.setImageBitmap(bitmap);
-                
+
 
             }
 
@@ -194,6 +233,9 @@ public class Settings_Profile extends AppCompatActivity {
                 = storageReference.getReference().child(
                         "images/*"
                                 + UUID.randomUUID().toString());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
         firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).update("ProfileImage" , ref.getDownloadUrl());
         ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -201,11 +243,20 @@ public class Settings_Profile extends AppCompatActivity {
                 Toast.makeText(Settings_Profile.this, "Image uploaded", Toast.LENGTH_SHORT).show();
 
             }
-        })
-        .addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+
                 Toast.makeText(Settings_Profile.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+
+                double progress = (100.0 * snapshot.getBytesTransferred() / snapshot
+                        .getTotalByteCount());
+                progressDialog.setMessage("Uploaded "+(int)progress+"%");
             }
         });
     }

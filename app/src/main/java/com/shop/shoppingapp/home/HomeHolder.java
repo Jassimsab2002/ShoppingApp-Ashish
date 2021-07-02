@@ -64,6 +64,7 @@ public class HomeHolder extends AppCompatActivity {
         //gridView
         arrayList = new ArrayList<>();
         customAdapter = new CustomAdapter(arrayList ,this,layoutInflater);
+
         firestore.collection("Product").whereEqualTo("Category",sCategory).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

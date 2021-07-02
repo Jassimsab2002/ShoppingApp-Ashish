@@ -62,6 +62,7 @@
             android:fontFamily="@font/bold"
             android:textSize="15dp"
             app:chipBackgroundColor="@color/chip_background"
+
             />
         <com.google.android.material.chip.Chip
             android:id="@+id/B"

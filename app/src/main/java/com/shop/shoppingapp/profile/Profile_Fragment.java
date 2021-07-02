@@ -46,7 +46,6 @@ public class Profile_Fragment extends Fragment {
         tUserName = view.findViewById(R.id.textview_username);
         tEmail = view.findViewById(R.id.textview_email);
 
-
         //Data work
         sUserName = sharedPreferences.getString("name","Please resign up data is lost!");
         sEmail = sharedPreferences.getString("email" , "Please resign up data is lost!");

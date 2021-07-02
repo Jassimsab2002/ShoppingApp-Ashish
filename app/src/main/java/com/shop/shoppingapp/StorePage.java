@@ -87,8 +87,10 @@ public class StorePage extends Fragment {
             @Override
             public void onCheckedChanged(ChipGroup chipGroup, int i) {
                 chip = view.findViewById(chipGroup.getCheckedChipId());
-                String s = chip.getText().toString().trim();
-                updateGrid(s);
+                if (chip != null) {
+                    String s = chip.getText().toString().trim();
+                    updateGrid(s);
+                }
             }
         });
 
@@ -118,7 +120,6 @@ public class StorePage extends Fragment {
                     if (task.isSuccessful()){
                         for (DocumentSnapshot documentSnapshot : task.getResult()){
                             arrayList.add(new Product(
-
                                     documentSnapshot.get("Title").toString()
                                     ,documentSnapshot.get("Price").toString()
                                     ,documentSnapshot.get("StoreName").toString()
@@ -126,7 +127,6 @@ public class StorePage extends Fragment {
                                     , Objects.requireNonNull(documentSnapshot.get("ImageUrl")).toString()
                                     ,documentSnapshot.get("Details").toString()
                                     ,documentSnapshot.getId()
-
                             ));
                         }
                         grid.setAdapter(customAdapter);

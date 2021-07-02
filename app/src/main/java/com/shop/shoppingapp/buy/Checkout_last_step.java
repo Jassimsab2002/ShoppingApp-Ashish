@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,12 +70,15 @@ public class Checkout_last_step extends AppCompatActivity {
     private Stripe stripe ;
     static ProgressBar progressBar ;
     FrameLayout fPay ;
-    static String sAddress , sTotalPrice , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId , sCountry;
+    static String sAddress , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId , sCountry;
     Intent intent ;
     static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<Orders> arrayListOrders = new ArrayList<>();
+    FrameLayout fThanks ;
+    TextView tThanks ;
+    ImageView iBack ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,16 @@ public class Checkout_last_step extends AppCompatActivity {
         fPay = findViewById(R.id.pay);
         progressBar = findViewById(R.id.progress_bar);
         cardInputWidget = findViewById(R.id.card);
+        fThanks = findViewById(R.id.thanks_background);
+        tThanks = findViewById(R.id.textview_thanks);
+        iBack = findViewById(R.id.back);
 
+        iBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Checkout_last_step.super.onBackPressed();
+            }
+        });
         progressBar.setVisibility(View.VISIBLE);
 
         //Intent
@@ -263,9 +276,18 @@ public class Checkout_last_step extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Intent intent = new Intent(Checkout_last_step.this, MyOrders_Change.class);
-                                startActivity(intent);
-                                finish();
+                                progressBar.setVisibility(View.INVISIBLE);
+                                fThanks.setAlpha(1.0f);
+                                tThanks.animate().alpha(1.0f).translationY(0);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(Checkout_last_step.this, MyOrders_Change.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                },4000);
+
                             }else{}
                         }
                     });
@@ -296,7 +318,22 @@ public class Checkout_last_step extends AppCompatActivity {
               */
 
 
-                   }
+                   }else{
+                tThanks.setText("Payment Unsuccessful please check your card !!");
+                progressBar.setVisibility(View.INVISIBLE);
+                fThanks.setAlpha(1.0f);
+                tThanks.animate().alpha(1.0f).translationY(0);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tThanks.setText("Payment is done successfully! thank you for your trust.");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        fThanks.setAlpha(0f);
+                        tThanks.animate().alpha(0f).translationY(100);
+                    }
+                },4000);
+
+            }
                     }
 
             }

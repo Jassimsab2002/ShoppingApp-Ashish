@@ -309,14 +309,17 @@ public class ActivityCart extends AppCompatActivity {
         };
         recyclerView.setAdapter(adapter);
 
-
         //setOnClicks
         bBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityCart.this, Checkout_first_step.class);
-                intent.putStringArrayListExtra("Data",arrayList);
-                startActivity(intent);
+                if (arrayList.size() > 0) {
+                    Intent intent = new Intent(ActivityCart.this, Checkout_first_step.class);
+                    intent.putStringArrayListExtra("Data", arrayList);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(ActivityCart.this, "Please add a product !", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

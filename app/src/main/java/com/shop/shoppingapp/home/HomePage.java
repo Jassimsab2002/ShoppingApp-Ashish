@@ -194,10 +194,11 @@ public class HomePage extends Fragment {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
+
                     case R.id.wishlist:
-                    Intent intent = new Intent(getActivity(), Favorite.class);
-                    startActivity(intent);
-                        break;
+                         Intent intent = new Intent(getActivity(), Favorite.class);
+                         startActivity(intent);
+                         break;
 
                     case R.id.account:
                         Intent dIntent =  new Intent(getActivity(), Settings_Profile.class);
@@ -216,7 +217,9 @@ public class HomePage extends Fragment {
                         break;
 
                 }
+
                 return true;
+
             }
         });
 
@@ -333,6 +336,7 @@ public class HomePage extends Fragment {
                 holder.setOnClickListener(new ProductHolder.ClickListener() {
                     @Override
                     public void onClickListener(View v) {
+
                         Intent intent = new Intent(getActivity(), product_page.class);
                         intent.putExtra("Title",model.getTitle());
                         intent.putExtra("StoreName",model.getStoreName());
@@ -432,8 +436,10 @@ public class HomePage extends Fragment {
             @NonNull
             @Override
             public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_store,parent,false);
                 return new ProductHolder(view);
+
             }
         };
 
@@ -494,9 +500,10 @@ public class HomePage extends Fragment {
         tSell_All_Best_Selling.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAct("Best Selling");
+                startAct("Automobiles");
             }
         });
+
         tSeeApparelMen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

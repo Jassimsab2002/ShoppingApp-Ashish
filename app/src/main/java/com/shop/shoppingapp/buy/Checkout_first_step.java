@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -65,12 +66,12 @@ public class Checkout_first_step extends AppCompatActivity {
     Intent intent ;
     ArrayList<String> arrayList ;
     SharedPreferences sharedPreferences ;
+    ImageView iBack ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_first_step);
-
 
         //findViews
         sCountry = findViewById(R.id.spinner_country);
@@ -80,6 +81,13 @@ public class Checkout_first_step extends AppCompatActivity {
         eNumber = findViewById(R.id.edittext_number);
         eAddress = findViewById(R.id.edittext_location);
         eZipCode = findViewById(R.id.edittext_zipcode);
+        iBack = findViewById(R.id.back);
+        iBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Checkout_first_step.super.onBackPressed();
+            }
+        });
 
         //Intent
         intent = getIntent();
@@ -92,12 +100,12 @@ public class Checkout_first_step extends AppCompatActivity {
         eAddress.setText(sAddress);
         eName.setText(sName);
 
-     /*
+        /*
         sPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
         sImage = intent.getStringExtra("Image");
         sTitle = intent.getStringExtra("Title");
-      */
+        */
 
         //Progress
         progressBar.setVisibility(View.INVISIBLE);
@@ -139,7 +147,7 @@ public class Checkout_first_step extends AppCompatActivity {
                    intent.putExtra("Title",sTitle);
                   */
 
-                   intent.putStringArrayListExtra("Data",arrayList);
+                    intent.putStringArrayListExtra("Data",arrayList);
                     startActivity(intent);
                     finish();
 

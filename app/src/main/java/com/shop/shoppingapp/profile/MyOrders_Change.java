@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.shop.shoppingapp.R;
 import com.shop.shoppingapp.buy.Order_Received;
+import com.shop.shoppingapp.buy.product_page;
 import com.shop.shoppingapp.module.Orders;
 import com.shop.shoppingapp.module.Product;
 import com.shop.shoppingapp.viewholders.ProductHolder;
@@ -82,6 +84,12 @@ public class MyOrders_Change extends AppCompatActivity {
                     tTitle.setText(model.getTitle());
                     tPrice.setText(model.getPrice());
                     tArrive.setText(model.getArrive());
+
+                    holder.setOnClickListener(new ProductHolder.ClickListener() {
+                        @Override
+                        public void onClickListener(View v) {
+                        }
+                    });
 
                     bConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
