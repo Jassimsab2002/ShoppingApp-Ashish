@@ -51,7 +51,9 @@ public class product_page extends AppCompatActivity {
     String sStoreName , sProductTitle , sProductPrice , sProductDescription , sProductDetails , sId ;
     ImageView iSend , iFavorite , iBack , iLeft , iRight  ;
     CardView cAddToCart , cBuyNow ;
-    String sProductShare = "" ;
+    String sProductShare = "Hello friend !" +
+            "\n Checkout this shopping app, you can find the best products in the world here." +
+            "\n https://play.google.com/store/apps/details?id=com.shop.shoppingapp " ;
     ViewPager vProductImages ;
     ProductImagesAdapter productImagesAdapter ;
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance() ;
@@ -160,6 +162,7 @@ public class product_page extends AppCompatActivity {
                 cAddToCart.setAlpha(0.5f);
                 showDialogow(0);
               /*
+
                 firebaseFirestore.collection("Product").whereEqualTo("Title",sProductTitle).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -185,6 +188,7 @@ public class product_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                showDialogow(45);
+
              /*
                 Intent intent = new Intent(product_page.this,Checkout_first_step.class);
                 aProduct = new ArrayList<>();
@@ -196,6 +200,7 @@ public class product_page extends AppCompatActivity {
                 intent.putStringArrayListExtra("Data",aProduct);
                 startActivity(intent);
               */
+
             }
         });
 
@@ -219,6 +224,7 @@ public class product_page extends AppCompatActivity {
                 firebaseFirestore.collection("Product").whereEqualTo("Id",sId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                    if (task.isSuccessful()){
                        for (DocumentSnapshot documentSnapshot : task.getResult()){
                            if (!favorite) {

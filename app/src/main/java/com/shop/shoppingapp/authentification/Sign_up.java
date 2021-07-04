@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 public class Sign_up extends AppCompatActivity {
 
+
     Button Sign_in , Sign_up ;
     EditText eEmail , ePassword , eConfirmPassword , eName , eAdresse ;
     String sEmail , sPassword , sConfirmPassword , sName , sAdresse ;
@@ -30,6 +31,7 @@ public class Sign_up extends AppCompatActivity {
     SharedPreferences sharedPreferences ;
     SharedPreferences.Editor editor ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,9 @@ public class Sign_up extends AppCompatActivity {
         Sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(Sign_up.this , Sign_In.class);
+                startActivity(intent);
+                finish();
             }
         });
 
