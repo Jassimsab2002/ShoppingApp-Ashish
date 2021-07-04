@@ -2,10 +2,10 @@ package com.shop.shoppingapp.module;
 
 public class Orders  {
 
-    String Image , UserId , Title , Arrive , Price , OrderId , ProductId ;
+    String Image , UserId , Title , Arrive , Price , OrderId , ProductId , Address , Name , Number  ;
 
     public Orders () {}
-    public Orders (String Image , String UserId , String Title , String Arrive , String Price , String OrderId , String ProductId){
+    public Orders (String Image , String UserId , String Title , String Arrive , String Price , String OrderId , String ProductId , String Address , String Name , String Number){
         this.Image = Image ;
         this.UserId = UserId ;
         this.Title = Title ;
@@ -13,6 +13,22 @@ public class Orders  {
         this.Price = Price ;
         this.OrderId = OrderId;
         this.ProductId = ProductId ;
+        this.Number = Number ;
+        this.Address = Address ;
+        this.Name = Name ;
+    }
+    public String getName(){return Name ;}
+    public String getNumber(){return Number ;}
+    public String getAddress(){return Address ;}
+
+    public void setName (String Name){
+        this.Name = Name ;
+    }
+    public void setAddress (String Address){
+        this.Address = Address ;
+    }
+    public void setNumber (String Number){
+        this.Number = Number ;
     }
     public String getProductId(){return ProductId ;}
     public void setProductId(String ProductId){

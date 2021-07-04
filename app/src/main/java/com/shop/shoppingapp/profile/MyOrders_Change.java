@@ -44,7 +44,7 @@ public class MyOrders_Change extends AppCompatActivity {
     FirestoreRecyclerAdapter firestoreRecyclerAdapter ;
     ImageView iProduct ;
     Button bConfirm ;
-    TextView tTitle , tPrice , tArrive , tPageTitle , tSubTitle  , sPrice , sTitle , sImage ;
+    TextView tTitle , tPrice , tArrive , tPageTitle , tSubTitle , tAddress , tName , tNumber ;
     ArrayList<Orders> arrayList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +79,17 @@ public class MyOrders_Change extends AppCompatActivity {
                     tArrive = holder.itemView.findViewById(R.id.num_unit);
                     iProduct = holder.itemView.findViewById(R.id.image);
                     bConfirm = holder.itemView.findViewById(R.id.confirm_receive);
+                    tName = holder.itemView.findViewById(R.id.name);
+                    tAddress = holder.itemView.findViewById(R.id.Adress);
+                    tNumber = holder.itemView.findViewById(R.id.number);
 
                     Glide.with(MyOrders_Change.this).load(model.getImage()).into(iProduct);
                     tTitle.setText(model.getTitle());
-                    tPrice.setText(model.getPrice());
+                    tPrice.setText(model.getPrice() + "$");
                     tArrive.setText(model.getArrive());
+                    tNumber.setText(model.getNumber());
+                    tAddress.setText(model.getAddress());
+                    tName.setText(model.getName());
 
                     holder.setOnClickListener(new ProductHolder.ClickListener() {
                         @Override

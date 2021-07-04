@@ -71,14 +71,14 @@ public class Srearch_Activity extends AppCompatActivity {
         iBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Srearch_Activity.super.onBackPressed();
             }
         });
 
     }
 
     private void search(String text) {
-        firestore.collection("Product").whereArrayContains("Keyword",text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("Product").whereArrayContains("Keyword",text.toLowerCase()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){

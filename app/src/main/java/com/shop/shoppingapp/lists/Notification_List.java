@@ -62,7 +62,12 @@ public class Notification_List extends AppCompatActivity {
                 tBody = holder.itemView.findViewById(R.id.textview_body);
                 tTitle.setText(model.getTitle());
                 tBody.setText(model.getBody());
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                                              @Override
+                                              public void onClickListener(View v) {
 
+                                              }
+                                          });
             }
 
             @NonNull

@@ -70,7 +70,7 @@ public class Checkout_last_step extends AppCompatActivity {
     private Stripe stripe ;
     static ProgressBar progressBar ;
     FrameLayout fPay ;
-    static String sAddress , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId , sCountry;
+    static String sAddress , sProductPrice , sShippingPrice , sId , sTitle , sImage , sUserId , sCountry , sName , sNumber;
     Intent intent ;
     static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -110,6 +110,9 @@ public class Checkout_last_step extends AppCompatActivity {
         getData(Objects.requireNonNull(intent.getStringArrayListExtra("Data")));
         sCountry = intent.getStringExtra("Country");
         sAddress = intent.getStringExtra("Address");
+        sName = intent.getStringExtra("Name");
+        sNumber = intent.getStringExtra("Number");
+
           /*
         sProductPrice = intent.getStringExtra("Price");
         sId = intent.getStringExtra("Id");
@@ -150,16 +153,16 @@ public class Checkout_last_step extends AppCompatActivity {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()){
                         for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+
                             sProductPrice = documentSnapshot.get("Price").toString();
                             sImage = documentSnapshot.get("ImageUrl").toString();
                             sTitle = documentSnapshot.get("Title").toString();
                             sId = documentSnapshot.get("Id").toString();
                             getShipping(documentSnapshot.getReference());
-
                             tAddress.setText(sAddress);
                             tPPrice.setText(sProductPrice + "$");
+                            arrayListOrders.add(new Orders(sImage,sUserId,sTitle,null,sProductPrice,generateId(),documentSnapshot.get("Id").toString() , sAddress , sName , sNumber));
 
-                            arrayListOrders.add(new Orders(sImage,sUserId,sTitle,null,sProductPrice,generateId(),documentSnapshot.get("Id").toString()));
                         }
                     }else{
                         Toast.makeText(Checkout_last_step.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -271,7 +274,9 @@ public class Checkout_last_step extends AppCompatActivity {
                     hashMap.put("BuyerId",sUserId);
                     hashMap.put("Title",model.getTitle());
                     hashMap.put("Price",model.getPrice());
-                    hashMap.put("OrderId",model.getOrderId());
+                    hashMap.put("OrderId","#" + model.getOrderId());
+                    hashMap.put("Name", sName);
+                    hashMap.put("Number",sNumber);
                     firestore.collection("Orders").document().set(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

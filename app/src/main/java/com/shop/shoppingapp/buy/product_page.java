@@ -132,6 +132,21 @@ public class product_page extends AppCompatActivity {
         });
 
         //onClicks
+        iLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vProductImages.setCurrentItem(vProductImages.getCurrentItem() - 1 , true);
+            }
+        });
+
+        iRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vProductImages.setCurrentItem(vProductImages.getCurrentItem() + 1 , true);
+            }
+        });
+
+
         iBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,7 +240,7 @@ public class product_page extends AppCompatActivity {
 
 
         //Reviews Work
-        layoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL ,false);
         rReview.setLayoutManager(layoutManager);
         Log.i("Test", "onCreate: " + sId);
         qReviews = firebaseFirestore.collection("Product").document(sId).collection("Reviews");

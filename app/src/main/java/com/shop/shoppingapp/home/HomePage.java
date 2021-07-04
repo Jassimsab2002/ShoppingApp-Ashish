@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.shop.shoppingapp.Cart.ActivityCart;
 import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
@@ -69,7 +70,7 @@ public class HomePage extends Fragment {
     Animation aDownUp , aLeftRight , aRightLeft , aRepeating;
     FirebaseUser user ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    TextView tUserName , tSeeShoes , tSeeApparelMen , tSeeApparelWomen, tSeeWatches , tHello , tSuggestions , tBest , tSell_All_Best_Selling  , tAds;
+    TextView tUserName , tSeeShoes , tSeeApparelMen , tSeeApparelWomen, tSeeWatches , tHello , tSuggestions , tBest , tSell_All_Best_Selling  , tAds , tCartNum;
     String sName ;
     RecyclerView recyclerView , shoesRecyclerView , menRecyclerView ,womanRecyclerView ,watchRecyclerView ;
     LinearLayoutManager layoutManager ,layoutManagerSuggestions ,menLayoutManager , womanLayoutManager ,watchesLayoutManager ;
@@ -85,6 +86,7 @@ public class HomePage extends Fragment {
     NavigationView navigationView ;
     EditText eSearch ;
     CardView cardView ;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,6 +119,7 @@ public class HomePage extends Fragment {
         tBest= view.findViewById(R.id.best);
         tSell_All_Best_Selling = view.findViewById(R.id.see_all_bestSelling);
         tAds = view.findViewById(R.id.text_ads);
+        tCartNum = view.findViewById(R.id.text_cart);
 
         setOnClicks();
         tUserName.setText(sName);
@@ -144,6 +147,15 @@ public class HomePage extends Fragment {
         tAds.startAnimation(aRepeating);
 
         //Ads
+        firestore.collection("Product").whereEqualTo("Cart" + firebaseAuth.getCurrentUser().getUid() , true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    int iCartNum = task.getResult().size();
+                    tCartNum.setText(String.valueOf(iCartNum));
+                }
+            }
+        });
         firestore.collection("Ads").document("1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -518,6 +530,22 @@ public class HomePage extends Fragment {
         Intent intent = new Intent(getActivity(), HomeHolder.class);
         intent.putExtra("Category",category);
         startActivity(intent);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        firestore.collection("Product").whereEqualTo("Cart" + firebaseAuth.getCurrentUser().getUid() , true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    int iCartNum = task.getResult().size();
+                    tCartNum.setText(String.valueOf(iCartNum));
+                }
+            }
+        });
 
     }
 

@@ -140,6 +140,8 @@ public class Checkout_first_step extends AppCompatActivity {
                    Intent intent = new Intent(Checkout_first_step.this ,Checkout_last_step.class);
                    intent.putExtra("Country",sSCountry);
                    intent.putExtra("Address",sAddress);
+                   intent.putExtra("Name" , sName);
+                   intent.putExtra("Number",sNumber);
                    /*
                    intent.putExtra("Price",sPrice);
                    intent.putExtra("Id",sId);
