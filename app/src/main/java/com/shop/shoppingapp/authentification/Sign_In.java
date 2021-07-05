@@ -3,7 +3,9 @@ package com.shop.shoppingapp.authentification;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,8 @@ public class Sign_In extends AppCompatActivity {
     String email , password ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance() ;
     ProgressBar progressBar ;
+    SharedPreferences sharedPreferences ;
+    SharedPreferences.Editor editor ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class Sign_In extends AppCompatActivity {
         ePassword = findViewById(R.id.password);
         eEmail = findViewById(R.id.email);
         progressBar = findViewById(R.id.progress_bar);
+
+        sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+
 
 
         Sign_in.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +64,9 @@ public class Sign_In extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             progressBar.setVisibility(View.INVISIBLE);
                        if (task.isSuccessful()){
+                           editor = sharedPreferences.edit();
+                           editor.putString("email",email);
+                           editor.apply();
                            Intent intent = new Intent(Sign_In.this , MainActivity.class);
                            startActivity(intent);
                            finish();

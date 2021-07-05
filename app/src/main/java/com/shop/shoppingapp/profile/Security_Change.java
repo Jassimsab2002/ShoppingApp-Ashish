@@ -31,7 +31,7 @@ public class Security_Change extends AppCompatActivity {
 
         //getData
         sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
-        sEmail = sharedPreferences.getString("email",null);
+        sEmail = sharedPreferences.getString("email","null");
 
         //setOnClicks
         bGetEmail.setOnClickListener(new View.OnClickListener() {
