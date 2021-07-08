@@ -65,8 +65,12 @@
         android:fontFamily="@font/bold"
         android:textColorHint="#25000000"
         android:textColor="#80000000"
-
+        android:singleLine="true"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
         />
+
 
     <EditText
         android:layout_width="match_parent"
@@ -74,11 +78,15 @@
         app:layout_constraintTop_toBottomOf="@id/edittext_name"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="15dp"
-        android:hint="New Address"
+        android:hint="Insert your phone number"
         android:fontFamily="@font/bold"
         android:textColorHint="#25000000"
         android:textColor="#80000000"
-        android:id="@+id/edittext_email"
+        android:id="@+id/edittext_number"
+        android:singleLine="true"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
         />
 
     <Button
@@ -86,12 +94,26 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:fontFamily="@font/bold"
-        app:layout_constraintTop_toBottomOf="@id/edittext_email"
+        app:layout_constraintTop_toBottomOf="@id/edittext_number"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="15dp"
         android:background="@color/colorPrimary"
+        android:maxLines="1"
         android:id="@+id/button_submit"
         />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Address"
+        android:fontFamily="@font/bold"
+        app:layout_constraintTop_toBottomOf="@id/button_submit"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#000"
+        android:maxLines="1"
+        android:id="@+id/button_address"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

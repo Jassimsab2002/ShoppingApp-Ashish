@@ -49,7 +49,11 @@
         android:textColorHint="#2C000000"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"/>
     <EditText
         android:id="@+id/edittext_rating"
         android:layout_width="match_parent"
@@ -65,7 +69,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:inputType="number"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:lines="1"
+        android:maxLines="1"/>
 
 
     <FrameLayout

@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.shop.shoppingapp.CustomAdapter;
 import com.shop.shoppingapp.R;
+import com.shop.shoppingapp.buy.product_page;
 import com.shop.shoppingapp.module.Product;
 
 import java.util.ArrayList;
@@ -89,6 +90,21 @@ public class HomeHolder extends AppCompatActivity {
               gridView.setAdapter(customAdapter);
            }
 
+            }
+        });
+
+        customAdapter.setOnClickListener(new CustomAdapter.ClickListener() {
+            @Override
+            public void onClickListener(View v, int position) {
+                Intent intent = new Intent(getApplicationContext(), product_page.class);
+                intent.putExtra("Title",arrayList.get(position).getTitle());
+                intent.putExtra("StoreName",arrayList.get(position).getStoreName());
+                intent.putExtra("Price", arrayList.get(position).getPrice());
+                intent.putExtra("Description",arrayList.get(position).getDescription());
+                intent.putExtra("ImageUrl",arrayList.get(position).getImageUrl());
+                intent.putExtra("Details",arrayList.get(position).getDetails());
+                intent.putExtra("Id",arrayList.get(position).getId());
+                startActivity(intent);
             }
         });
 

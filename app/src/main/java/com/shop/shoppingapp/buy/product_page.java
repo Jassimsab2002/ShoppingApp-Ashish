@@ -432,6 +432,7 @@ public class product_page extends AppCompatActivity {
         dialog.show();
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();

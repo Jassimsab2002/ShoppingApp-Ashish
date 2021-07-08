@@ -2,10 +2,14 @@ package com.shop.shoppingapp.profile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,7 +18,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -23,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,6 +38,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -38,7 +47,10 @@ import com.google.firebase.storage.UploadTask;
 import com.shop.shoppingapp.FragmentInterface;
 import com.shop.shoppingapp.MainActivity;
 import com.shop.shoppingapp.R;
+import com.shop.shoppingapp.buy.AddressActivity;
 import com.shop.shoppingapp.home.HomePage;
+import com.shop.shoppingapp.module.Address;
+import com.shop.shoppingapp.viewholders.ProductHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,14 +59,14 @@ import java.util.UUID;
 
 public class Settings_Profile extends AppCompatActivity {
 
-    EditText eName , eAdress ;
-    Button bSubmit ;
+    EditText eName  , eNumber ;
+    Button bSubmit , iAddress ;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance() ;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance() ;
     SharedPreferences sharedPreferences ;
     SharedPreferences.Editor editor ;
-    ImageView iBack ;
-    String sName , sImage , sAddress ;
+    ImageView iBack , iEdit , iClose;
+    String sName , sImage , sAddress , sNumber , sENumber  ;
     FragmentInterface fragmentInterface ;
     HomePage homePage ;
     MainActivity mainActivity ;
@@ -63,7 +75,9 @@ public class Settings_Profile extends AppCompatActivity {
     Uri filePath ;
     FirebaseStorage storageReference = FirebaseStorage.getInstance();
     FrameLayout fThanks ;
-    TextView tThanks ;
+    TextView tThanks , tAddress;
+    FirestoreRecyclerAdapter firestoreRecyclerAdapter ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +87,9 @@ public class Settings_Profile extends AppCompatActivity {
         //findviews
         eName = findViewById(R.id.edittext_name);
         bSubmit = findViewById(R.id.button_submit);
-        eAdress = findViewById(R.id.edittext_email);
+        eNumber = findViewById(R.id.edittext_number);
+        iAddress = findViewById(R.id.button_address);
+
         iBack = findViewById(R.id.back);
         iProfile = findViewById(R.id.profile_image);
 
@@ -83,6 +99,8 @@ public class Settings_Profile extends AppCompatActivity {
         sName = sharedPreferences.getString("name","You need to resign in we lost the data.");
         sAddress = sharedPreferences.getString("address","You need to resign in we lost the data");
         sImage = sharedPreferences.getString("image",null);
+        sNumber = sharedPreferences.getString("number" , null);
+
 
         if (sImage != null){
             Uri uri = Uri.parse(sImage);
@@ -95,9 +113,11 @@ public class Settings_Profile extends AppCompatActivity {
         homePage = new HomePage();
 
         //setData
+        if (sNumber != null){
+            eNumber.setText(sNumber);
+        }
 
         eName.setText(sName);
-        eAdress.setText(sAddress);
         /*
         firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -121,6 +141,13 @@ public class Settings_Profile extends AppCompatActivity {
             }
         });
 
+        iAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lunchAlertDialog();
+            }
+        });
+
         iProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,15 +161,15 @@ public class Settings_Profile extends AppCompatActivity {
 
                 bSubmit.setAlpha(0.2f);
                 sName = eName.getText().toString();
+                sENumber = eNumber.getText().toString();
                 editor.remove("name");
                 editor.putString("name" , sName);
                 editor.remove("Address");
                 editor.putString("Address",sAddress);
-
-
-                final HashMap<String,Object> hashMap = new HashMap<>();
-                hashMap.put("Name",sName);
-                hashMap.put("Address",sAddress);
+                if (sNumber != null){
+                    editor.remove("number");
+                }
+                editor.putString("number" , sENumber);
 
                 if (filePath != null){
                     editor.remove("image");
@@ -269,6 +296,83 @@ public class Settings_Profile extends AppCompatActivity {
     private void startAct(int s) {
         Intent intent = new Intent(Settings_Profile.this,MainActivity.class);
         startActivity(intent);
+    }
+    public void lunchAlertDialog (){
+        // create an alert builder
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Saved Addresses");
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.address_alertdialog, null);
+        builder.setView(customLayout);
+        // create and show the alert dialog
+        final RecyclerView recyclerView = customLayout.findViewById(R.id.recyclerview);
+
+        builder.setPositiveButton("Add New Address", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings_Profile.this, AddressActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this ,LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+        //firebase
+        Query query = firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).collection("Address");
+
+        FirestoreRecyclerOptions<Address> firestoreRecyclerOptions = new FirestoreRecyclerOptions.Builder<Address>()
+                .setQuery(query,Address.class)
+                .build();
+
+
+        firestoreRecyclerAdapter = new FirestoreRecyclerAdapter<Address, ProductHolder>(firestoreRecyclerOptions) {
+
+            @Override
+            protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull final Address model) {
+                Log.i("Test", "onBindViewHolder: " + "good");
+                iEdit = holder.itemView.findViewById(R.id.image_edit);
+                tAddress = holder.itemView.findViewById(R.id.text_address);
+                iClose = holder.itemView.findViewById(R.id.check_box);
+                iEdit.setVisibility(View.INVISIBLE);
+                tAddress.setText(model.getAddress());
+
+                iClose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).collection("Address").whereEqualTo("Address",model.getAddress()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                    documentSnapshot.getReference().delete();
+                                }
+                            }
+                        });
+                    }
+                });
+                holder.setOnClickListener(new ProductHolder.ClickListener() {
+                    @Override
+                    public void onClickListener(View v) {
+
+                    }
+                });
+
+
+            }
+
+            @NonNull
+            @Override
+            public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_address,parent,false);
+                return new ProductHolder(view);
+            }
+        };
+
+
+        firestoreRecyclerAdapter.startListening();
+        recyclerView.setAdapter(firestoreRecyclerAdapter);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
